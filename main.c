@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +14,8 @@
 #define TRUE   1
 #define FALSE  0
 #define LG_MESSAGE 256
+
+#include "pixel.h"
 
 int main(int argc , char *argv[])
 {
