@@ -8,10 +8,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/time.h>
+#include <ctype.h>
  
 #define TRUE   1
 #define FALSE  0
-#define PORT 5000
 #define LG_MESSAGE 256
 
 int main(int argc , char *argv[])
@@ -28,6 +28,38 @@ int main(int argc , char *argv[])
     fd_set readfds;
  
     char *message = "Connecté \r\n";
+
+    int pflag = 0;
+    int c;
+    int port = 5000;
+    char *pvalue = NULL;
+
+    while((c = getopt(argc, argv, "p:")) != -1){
+        switch(c){
+            case 'p':
+                pflag = 1;
+                pvalue = optarg;
+                port = atoi(pvalue);
+                break;
+            case '?':
+                if (optopt == 'p'){
+                    fprintf (stderr, "l'option -%c necessite un argument.\n", optopt);
+                }
+                else if(isprint(optopt)){
+                    fprintf (stderr, "Option inconnue `-%c'.\n", optopt);
+                }
+                else{
+                    fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+                }
+            default:
+                abort();
+        }
+    }
+
+    if(pflag == 1){
+        printf("Ca marche \n");
+
+    }
  
     for (i = 0; i < max_clients; i++) 
     {
@@ -45,17 +77,17 @@ int main(int argc , char *argv[])
         perror("erreur setsocket");
         exit(EXIT_FAILURE);
     }
- 
+
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons( PORT );
+    address.sin_port = htons(port);
      
-    if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0) 
-    {
+    if (bind(master_socket, (struct sockaddr *)&address, sizeof(address))<0){
         perror("erreur bind");
         exit(-2);
     }
-	printf("Ecoute sur le port : %d \n", PORT);
+
+	printf("Ecoute sur le port : %d \n", port);
 	
     if (listen(master_socket, 3) < 0)
     {
@@ -94,6 +126,8 @@ int main(int argc , char *argv[])
          
         if (FD_ISSET(master_socket, &readfds)) 
         {
+            
+
             if ((new_socket = accept(master_socket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0)
             {
                 perror("accept");
