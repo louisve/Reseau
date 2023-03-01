@@ -58,11 +58,6 @@ int main(int argc , char *argv[])
                 abort();
         }
     }
-
-    if(pflag == 1){
-        printf("Ca marche \n");
-
-    }
  
     for (i = 0; i < max_clients; i++) 
     {
