@@ -72,17 +72,17 @@ int main(int argc , char *argv[])
         FD_ZERO(&readfds);
  
         FD_SET(master_socket, &readfds);
-        max_sd = master_socket;
+        max_sd = 1;
 		
         for ( i = 0 ; i < max_clients ; i++) 
         {
 			sd = client_socket[i];
             
-			if(sd > 0)
-				FD_SET( sd , &readfds);
+			if(sd > 0){
+                FD_SET( sd , &readfds);
+                max_sd++;
+            }
             
-            if(sd > max_sd)
-				max_sd = sd;
         }
  
         activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
@@ -126,7 +126,7 @@ int main(int argc , char *argv[])
              
             if (FD_ISSET( sd , &readfds)) 
             {
-                if ((valread = read( sd , buffer, 1024)) == 0)
+                if ((valread = read( sd , buffer, 1024)) <= 0)
                 {
                     getpeername(sd , (struct sockaddr*)&address , (socklen_t*)&addrlen);
                     printf("Client %s : %d  déconnecté\n" , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
@@ -138,26 +138,12 @@ int main(int argc , char *argv[])
                 else
                 {
                     buffer[valread] = '\0';
-                    send(sd , buffer , strlen(buffer) , 0 );
+                    printf("Message reçu : %s (%d octets)\n\n", buffer, valread);
+
                 }
             }
         }
 
-        // On réceptionne les données du client (cf. protocole)
-        valread = read(new_socket, messageRecu, LG_MESSAGE*sizeof(char)); // ici appel bloquant
-        switch(valread){
-        case -1 : /* une erreur ! */
-            perror("read");
-            close(new_socket);
-            exit(-5);
-        case 0 : /* la socket est fermée */
-            fprintf(stderr, "La socket a été fermée par le client !\n\n");
-            close(new_socket);
-            return 0;
-        default: /* réception de n octets */
-            printf("Message reçu : %s (%d octets)\n\n", messageRecu, valread);
-        }
     }
-     
     return 0;
 }
