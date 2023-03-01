@@ -78,14 +78,14 @@ int main(int argc , char *argv[])
         {
 			sd = client_socket[i];
             
-			if(sd > 0){
+			if(sd >= 0){
                 FD_SET( sd , &readfds);
                 max_sd++;
             }
             
         }
  
-        activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
+        activity = select( max_sd, &readfds , NULL , NULL , NULL);
         
         if ((activity < 0) && (errno!=EINTR)) 
         {
