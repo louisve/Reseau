@@ -41,3 +41,6 @@ void remove_client(Client **head, int socket);
 void print_clients(Client *head);
 void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
 void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
+char* intToBinary(int n,int decal,char *binary);
+void binary_to_base64(char* binary, char* base64_output);
+char * rgbToBinary(int r, int g, int b);

@@ -145,6 +145,17 @@ int main(int argc , char *argv[])
         }
 
     }
+
+
+    //  char* binary = rgbToBinary(255,255,255);
+    // printf("en binaire est : %s\n", binary);
+
+    // char base64_output[20]; // Chaîne de sortie pour le résultat en base64
+    // binary_to_base64(binary, base64_output);
+    // printf("Base64: %s\n", base64_output);
+    // free(binary); // ne pas oublier de libérer la mémoire allouée avec malloc
+
+
     return 0;
 }
 
