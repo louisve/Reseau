@@ -1,13 +1,15 @@
 #include "Client.h"
 
-int main(){
+int main(int argc , char *argv[]){
 
     int descripteurSocket;
     struct sockaddr_in pointDeRencontreDistant;
     socklen_t longueurAdresse;
     char messageEnvoi[LG_MESSAGE];
     //char messageRecu[LG_MESSAGE];
-    int ecrits; //lus;
+    int ecrits, c; //lus;
+    int port = 5000;
+    char *pvalue = NULL;
 
     descripteurSocket = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -16,10 +18,31 @@ int main(){
         exit(-1);
     }
 
+    while((c = getopt(argc, argv, "p:")) != -1){
+        switch(c){
+            case 'p':
+                pvalue = optarg;
+                port = atoi(pvalue);
+                break;
+            case '?':
+                if (optopt == 'p'){
+                    fprintf (stderr, "l'option -%c necessite un argument.\n", optopt);
+                }
+                else if(isprint(optopt)){
+                    fprintf (stderr, "Option inconnue `-%c'.\n", optopt);
+                }
+                else{
+                    fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+                }
+            default:
+                abort();
+        }
+    }
+
     longueurAdresse = sizeof(pointDeRencontreDistant);
     memset(&pointDeRencontreDistant, 0x00, longueurAdresse);
     pointDeRencontreDistant.sin_family = PF_INET;
-    pointDeRencontreDistant.sin_port = htons(IPPORT_USERRESERVED);
+    pointDeRencontreDistant.sin_port = htons(port);
     
     inet_aton("127.0.0.1", &pointDeRencontreDistant.sin_addr);
     
@@ -33,7 +56,7 @@ int main(){
     memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
     //memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char));
 
-    while(true){
+    while(TRUE){
         scanf("%s", messageEnvoi);
         ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
 
