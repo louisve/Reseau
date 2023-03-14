@@ -6,8 +6,6 @@ int main(int argc , char *argv[])
     int master_socket , addrlen , new_socket , activity, valread , sd;
 	int max_sd;
     struct sockaddr_in address;
-    char messageEnvoi[LG_MESSAGE]; /* le message de la couche Application ! */
-    char messageRecu[LG_MESSAGE]; /* le message de la couche Application ! */
      
     char buffer[1025];
     Client *clients = NULL;
@@ -18,7 +16,6 @@ int main(int argc , char *argv[])
  
     // char *message = "Connecté \r\n";
 
-    // int pflag = 0;
     int c;
     int port = 5000;
     char *pvalue = NULL;
@@ -26,7 +23,6 @@ int main(int argc , char *argv[])
     while((c = getopt(argc, argv, "p:")) != -1){
         switch(c){
             case 'p':
-                // pflag = 1;
                 pvalue = optarg;
                 port = atoi(pvalue);
                 break;
@@ -45,14 +41,12 @@ int main(int argc , char *argv[])
         }
     }
      
-    if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0) 
-    {
+    if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0){
         perror("erreur socket");
         exit(-1);
     }
 
-    if( setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )
-    {
+    if(setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0){
         perror("erreur setsocket");
         exit(EXIT_FAILURE);
     }
@@ -68,15 +62,12 @@ int main(int argc , char *argv[])
 
 	printf("Ecoute sur le port : %d \n", port);
 	
-    if (listen(master_socket, 3) < 0)
-    {
+    if (listen(master_socket, 3) < 0){
         perror("listen");
         exit(-3);
     }
      
     addrlen = sizeof(address);
-    memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
-    memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char));
     
 	while(TRUE) 
     {
@@ -97,10 +88,7 @@ int main(int argc , char *argv[])
 			current = current->next;
         }
 
-        
-        printf("Select sur %d sockets\n",FD_SETSIZE);
         activity = select( FD_SETSIZE, &readfds , NULL , NULL , NULL);
-        printf("Select out %d\n",activity);
         
         if ((activity < 0) && (errno!=EINTR)) 
         {
@@ -129,14 +117,13 @@ int main(int argc , char *argv[])
          
 
         current = clients;
-        while (current != NULL)
-        {
+        while (current != NULL){
+
             sd = current->socket;
              
-            if (FD_ISSET( sd , &readfds)) 
-            {
-                if ((valread = read( sd , buffer, 1024)) <= 0)
-                {
+            if (FD_ISSET(sd , &readfds)){
+                if ((valread = read(sd, buffer, 1024)) <= 0){
+
                     getpeername(sd , (struct sockaddr*)&address , (socklen_t*)&addrlen);
                     printf("Client %s : %d  déconnecté\n" , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
                      
@@ -144,8 +131,8 @@ int main(int argc , char *argv[])
                     remove_client(&clients, current->socket);
                 }
                  
-                else
-                {
+                else{
+
                     buffer[valread] = '\0';
                     printf("Message reçu : %s (%d octets)\n\n", buffer, valread);
 
