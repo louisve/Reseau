@@ -8,4 +8,4 @@ pixel.o: pixel.c
 	gcc -g -Wall -c pixel.c
 
 clean:
-	rm * .o
+	rm *.o
