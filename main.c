@@ -19,7 +19,10 @@ int main(int argc , char *argv[])
     int c;
     int port = 5000;
     char *pvalue = NULL;
+    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
+    initMatrice(matrice);
 
+    
     while((c = getopt(argc, argv, "p:")) != -1){
         switch(c){
             case 'p':

@@ -14,6 +14,9 @@
 #define FALSE  0
 #define PORT 5000
 #define LG_MESSAGE 256
+#define NB_LIGNE 20 //hauteur
+#define NB_COLONNE 40 //largeur
+#define TAILLE_MAX_CHAINE 20
 
 
 
@@ -36,3 +39,5 @@ typedef struct COULEUR couleur;
 void add_client(Client **head, int socket);
 void remove_client(Client **head, int socket);
 void print_clients(Client *head);
+void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
+void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);

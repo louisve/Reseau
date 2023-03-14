@@ -54,19 +54,19 @@ void print_clients(Client *head) {
     printf("\n");
 }
 
-// int main() {
-//     Client *clients = NULL;
+void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
+    for (int i = 0; i < NB_LIGNE; i++){
+        for (int j = 0; j < NB_COLONNE; j++){
+            strcpy(matrice[i][j], "////");
+        }
+    }
+}
 
-//     // Add clients to the linked list
-//     add_client(&clients, 1);
-//     add_client(&clients, 2);
-//     add_client(&clients, 3);
-
-//     // Remove a client from the linked list
-//     remove_client(&clients, 2);
-
-//     // Print the remaining clients in the linked list
-//     print_clients(clients);
-
-//     return 0;
-// }
+void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
+    for (int i = 0; i < NB_LIGNE; i++){
+        for (int j = 0; j < NB_COLONNE; j++){
+            printf("[%s]",matrice[i][j]);
+        }
+        printf("\n");
+    }
+}
