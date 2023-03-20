@@ -57,8 +57,11 @@ int main(int argc , char *argv[]){
     //memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char));
 
     while(TRUE){
-        scanf("%s", messageEnvoi);
-        ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
+
+        fgets(messageEnvoi, 256, stdin);
+        if(messageEnvoi != NULL){
+            ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
+        }
 
         switch(ecrits){
             case -1 :
