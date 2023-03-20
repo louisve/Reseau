@@ -14,8 +14,8 @@
 #define FALSE  0
 #define PORT 5000
 #define LG_MESSAGE 256
-#define NB_LIGNE 20 //hauteur
-#define NB_COLONNE 40 //largeur
+#define NB_LIGNE 5 //hauteur
+#define NB_COLONNE 5 //largeur
 #define TAILLE_MAX_CHAINE 20
 
 
@@ -42,5 +42,6 @@ void print_clients(Client *head);
 void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
 void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
 char* intToBinary(int n,int decal,char *binary);
-void binary_to_base64(char* binary, char* base64_output);
+char binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
+void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, int R, int G, int B);

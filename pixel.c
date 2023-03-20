@@ -95,7 +95,7 @@ char * rgbToBinary(int r, int g, int b){
     return binary;
 }
 
-void binary_to_base64(char* binary, char* base64_output) {
+char binary_to_base64(char* binary,char* base64_output) {
     char* base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"; // Tableau de conversion base64
     int i, j, k;
     int length = strlen(binary);
@@ -138,4 +138,18 @@ void binary_to_base64(char* binary, char* base64_output) {
     
     // Ajout du caractère de fin de chaîne
     base64_output[index] = '\0';
+
+    return *base64_output;
+}
+
+
+void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, int R, int G, int B){
+
+    char* binary = rgbToBinary(R, G, B);
+
+    char base64_output[20]; // Chaîne de sortie pour le résultat en base64
+    binary_to_base64(binary, base64_output);
+    free(binary); // ne pas oublier de libérer la mémoire allouée avec malloc
+
+    strcpy(matrice[hauteur][largeur], base64_output);
 }
