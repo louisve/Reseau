@@ -17,8 +17,8 @@
 #define NB_LIGNE 5 //hauteur
 #define NB_COLONNE 5 //largeur
 #define TAILLE_MAX_CHAINE 20
-
-
+#define PIXEL_PER_MINUTE_MAX 12 
+#define VERSION 1
 
 struct CLIENT {
     int socket;
@@ -27,6 +27,7 @@ struct CLIENT {
 
 
 struct COULEUR {
+    char ASCII[20];
     int R;
     int G;
     int B;
@@ -39,9 +40,12 @@ typedef struct COULEUR couleur;
 void add_client(Client **head, int socket);
 void remove_client(Client **head, int socket);
 void print_clients(Client *head);
-void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
-void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
+void initMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]);
+void afficheMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]);
 char* intToBinary(int n,int decal,char *binary);
-char binary_to_base64(char* binary, char* base64_output);
+void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
-void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, int R, int G, int B);
+void setPixel(couleur matrice[NB_LIGNE][NB_COLONNE], int hauteur, int largeur, int R, int G, int B);
+void getSize();
+void getLimits();
+void getVersion();

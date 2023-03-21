@@ -54,18 +54,18 @@ void print_clients(Client *head) {
     printf("\n");
 }
 
-void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
+void initMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
-            strcpy(matrice[i][j], "////");
+            strcpy(matrice[i][j].ASCII, "////");
         }
     }
 }
 
-void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
+void afficheMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
-            printf("[%s]",matrice[i][j]);
+            printf("[%s]",matrice[i][j].ASCII);
         }
         printf("\n");
     }
@@ -95,7 +95,7 @@ char * rgbToBinary(int r, int g, int b){
     return binary;
 }
 
-char binary_to_base64(char* binary,char* base64_output) {
+void binary_to_base64(char* binary,  char* base64_output) {
     char* base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"; // Tableau de conversion base64
     int i, j, k;
     int length = strlen(binary);
@@ -138,18 +138,32 @@ char binary_to_base64(char* binary,char* base64_output) {
     
     // Ajout du caractère de fin de chaîne
     base64_output[index] = '\0';
-
-    return *base64_output;
 }
 
 
-void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, int R, int G, int B){
+void setPixel(couleur matrice[NB_LIGNE][NB_COLONNE], int hauteur, int largeur, int R, int G, int B){
+
+    matrice[hauteur][largeur].R = R;
+    matrice[hauteur][largeur].G = G;
+    matrice[hauteur][largeur].B = B;
+
 
     char* binary = rgbToBinary(R, G, B);
-
-    char base64_output[20]; // Chaîne de sortie pour le résultat en base64
+    char base64_output[20];
     binary_to_base64(binary, base64_output);
     free(binary); // ne pas oublier de libérer la mémoire allouée avec malloc
 
-    strcpy(matrice[hauteur][largeur], base64_output);
+    strcpy(matrice[hauteur][largeur].ASCII, base64_output);
+}
+
+void getSize(){
+    printf("%d x %d\n",NB_LIGNE, NB_COLONNE);
+}
+
+void getLimits(){
+    printf("Vous pouvez changer %d max par minutes\n", PIXEL_PER_MINUTE_MAX);
+}
+
+void getVersion(){
+    printf("Version actuelle : %d.0\n",VERSION);
 }
