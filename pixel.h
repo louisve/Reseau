@@ -9,13 +9,14 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 #include <ctype.h>
+#include <getopt.h>
  
 #define TRUE   1
 #define FALSE  0
 #define PORT 5000
 #define LG_MESSAGE 256
-#define NB_LIGNE 5 //hauteur
-#define NB_COLONNE 5 //largeur
+#define NB_COLONNE 80
+#define NB_LIGNE 40
 #define TAILLE_MAX_CHAINE 20
 #define PIXEL_PER_MINUTE_MAX 12 
 #define VERSION 1

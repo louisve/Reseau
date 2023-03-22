@@ -1,4 +1,5 @@
-#include "Client.h"
+
+#include "affichage.h"
 
 int main(int argc , char *argv[]){
 
@@ -34,6 +35,7 @@ int main(int argc , char *argv[]){
                 else{
                     fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
                 }
+            break;
             default:
                 abort();
         }
@@ -56,8 +58,11 @@ int main(int argc , char *argv[]){
     memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
     memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char));
 
-    while(TRUE){
 
+    while(TRUE){
+    char* chaine64 = malloc(sizeof(char*));
+	affichage(chaine64);
+    
         fgets(messageEnvoi, 256, stdin);
         if(messageEnvoi != NULL){
             ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
@@ -90,9 +95,6 @@ int main(int argc , char *argv[]){
                 printf("Message reçu du serveur : \n%s \n", messageRecu);
         }
     }
-    
-    
-
     close(descripteurSocket);
     return 0;
 }

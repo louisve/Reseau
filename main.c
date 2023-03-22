@@ -25,7 +25,7 @@ int main(int argc , char *argv[])
     int c;
     int port = 5000;
     char *pvalue = NULL;
-    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
+    couleur matrice[NB_LIGNE][NB_COLONNE];
     initMatrice(matrice);
     char colorpx[50] = "";
     char tabdonnees[5][60] = {"", "", "", "", ""};
@@ -52,6 +52,7 @@ int main(int argc , char *argv[])
                 else{
                     fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
                 }
+                break;
             default:
                 abort();
         }
@@ -152,7 +153,7 @@ int main(int argc , char *argv[])
 
                     buffer[valread] = '\0';
                     printf("Message reçu : %s (%d octets)\n\n", buffer, valread);
-                    printf("%s\n", buffer);
+                    //printf("%s\n", buffer);
 
                     if(strncmp(buffer, "/setPixel", 9) == 0){ //verification de la commande
                         char *decoupe = strtok(buffer, " ");
