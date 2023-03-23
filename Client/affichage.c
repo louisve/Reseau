@@ -20,23 +20,23 @@ void drawGrid(SDL_Renderer* renderer, SDL_Color color){
 }
 
 // fonction qui colorie la case sélectionnée en rouge
-void colorCell(SDL_Renderer* renderer, int x, int y, SDL_Color color){
+void selectCase(SDL_Renderer* renderer, int x, int y, SDL_Color color, int* i, int* j){
     int GRID_WIDTH = GRID_MAX_WIDTH / NB_COLONNE;
     int GRID_HEIGHT = GRID_MAX_HEIGHT / NB_LIGNE;
     // calcule les indices de la case sélectionnée
-    int i = x / GRID_WIDTH;
-    int j = y / GRID_HEIGHT;
+    *i = x / GRID_WIDTH;
+    *j = y / GRID_HEIGHT;
     
     // calcule les coordonnées de la case sélectionnée
-    int x1 = i * GRID_WIDTH;
-    int y1 = j * GRID_HEIGHT;
+    int x1 = *i * GRID_WIDTH;
+    int y1 = *j * GRID_HEIGHT;
     int x2 = x1 + GRID_WIDTH - 1;
     int y2 = y1 + GRID_HEIGHT - 1;
     
     // dessine un rectangle rouge dans la case sélectionnée
     SDL_Rect rect = {x1, y1, x2 - x1 + 1, y2 - y1 + 1};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    SDL_RenderFillRect(renderer, &rect);
+    SDL_RenderDrawRect(renderer, &rect);
 }
 
 // void initCases(SDL_Renderer* renderer, char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
@@ -82,7 +82,7 @@ void palette(SDL_Renderer* renderer){
     SDL_SetRenderDrawColor(renderer, 255,255,255,255);
     SDL_RenderFillRect(renderer, &case8);
 
-    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+    SDL_SetRenderDrawColor(renderer,0,0,0,255);
     for (int i = START_Y_PALETTE; i < START_Y_PALETTE+(3*COTE_PALETTE); i += COTE_PALETTE){
         SDL_RenderDrawLine(renderer, START_X_PALLETTE, i, START_X_PALLETTE+(4*COTE_PALETTE), i);
     }
@@ -157,7 +157,7 @@ int setWindowColor(SDL_Renderer *renderer, SDL_Color color){
     return 0;  
 }
 
-void affichage(char* chaine64){
+void affichage(char* chaine64,int* i, int* j){
     // initialise SDL
     SDL_Init(SDL_INIT_VIDEO);
     
@@ -167,19 +167,27 @@ void affichage(char* chaine64){
     // crée un rendu de la fenêtre
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     
+
     //Couleurs 
-    SDL_Color blanc = {255, 255, 255, 255};
-    SDL_Color noir = {0, 0, 0, 255};
+    SDL_Color bleu = {0,0,255,255};
+    SDL_Color vert = {0,255,0,255};
     SDL_Color rouge = {255,0,0,255};
+    SDL_Color noir = {0,0,0,255};
+    SDL_Color magenta = {255,0,255,255};
+    SDL_Color cyan = {0,255,255,255};
+    SDL_Color jaune = {255,255,0,255};
+    SDL_Color blanc = {255, 255, 255, 255};
+    SDL_Color gris = {200,200,200,255};
 
     // dessine le fond en noir
     setWindowColor(renderer, blanc);
     SDL_RenderClear(renderer);
         
     // dessine la grille
-    drawGrid(renderer,noir);
+    drawGrid(renderer,gris);
 
     palette(renderer);
+    bouton(renderer,gris);
     SDL_RenderPresent(renderer);
     // boucle principale
     SDL_Event event;
@@ -201,12 +209,53 @@ void affichage(char* chaine64){
                     if(event.button.button == SDL_BUTTON_LEFT )
                     {
                         if(event.button.x <= GRID_MAX_WIDTH && event.button.y <= GRID_MAX_HEIGHT){
-                            colorCell(renderer, event.button.x, event.button.y,rouge);
+                            SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+                            SDL_Rect fondMatrice = {0,0,GRID_MAX_WIDTH,GRID_MAX_HEIGHT};
+                            SDL_RenderFillRect(renderer, &fondMatrice);
+                            drawGrid(renderer,gris);
+                            SDL_RenderPresent(renderer);
+                            selectCase(renderer, event.button.x, event.button.y,noir,i,j);
+                            SDL_RenderPresent(renderer);
+                            printf("Case selectionnée : i = %d, j = %d\n",*i,*j);
                         }
                         else if(event.button.x <= START_X_PALLETTE + (4*COTE_PALETTE) && event.button.y <= START_Y_PALETTE+(2*COTE_PALETTE) && event.button.x >= START_X_PALLETTE && event.button.y >= START_Y_PALETTE){
                             
                             selectCouleur(event.button.x, event.button.y, chaine64);
                             //printf("La couleur  choisit est : %s\n", chaine64);
+
+                            if(strcmp("AAD/",chaine64) == 0){
+                                bouton(renderer, bleu);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("AP8A",chaine64) == 0){
+                                bouton(renderer, vert);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("/wAA",chaine64) == 0){
+                                bouton(renderer, rouge);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("AAAA",chaine64) == 0){
+                                bouton(renderer, noir);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("/wD/",chaine64) == 0){
+                                bouton(renderer, magenta);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("AP//",chaine64) == 0){
+                                bouton(renderer, cyan);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("//8A",chaine64) == 0){
+                                bouton(renderer, jaune);
+                                SDL_RenderPresent(renderer);
+                            }
+                            else if(strcmp("////",chaine64) == 0){
+                                bouton(renderer, blanc);
+                                SDL_RenderPresent(renderer);
+                            }
+                            
                         }
                     }
 
@@ -226,4 +275,18 @@ void affichage(char* chaine64){
     if(NULL != window)
         SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+void bouton(SDL_Renderer* renderer, SDL_Color color){
+    SDL_Rect bouton = {START_X_BOUTON,START_Y_BOUTON,LARGEUR_BOUTON,HAUTEUR_BOUTON};
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(renderer, &bouton);
+
+    SDL_SetRenderDrawColor(renderer,0,0,0,255);
+    for (int i = START_Y_BOUTON; i <= START_Y_BOUTON+HAUTEUR_BOUTON; i += HAUTEUR_BOUTON){
+        SDL_RenderDrawLine(renderer, START_X_BOUTON, i, START_X_BOUTON+LARGEUR_BOUTON, i);
+    }
+    for (int i = START_X_BOUTON; i <= START_X_BOUTON+LARGEUR_BOUTON; i += LARGEUR_BOUTON){
+        SDL_RenderDrawLine(renderer, i, START_Y_BOUTON, i, START_Y_BOUTON+HAUTEUR_BOUTON);
+    }
 }

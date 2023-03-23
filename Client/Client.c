@@ -61,7 +61,10 @@ int main(int argc , char *argv[]){
 
     while(TRUE){
     char* chaine64 = malloc(sizeof(char*));
-	affichage(chaine64);
+    int* i = malloc(sizeof(int*));
+    int* j = malloc(sizeof(int*));
+
+	affichage(chaine64,i,j);
     
         fgets(messageEnvoi, 256, stdin);
         if(messageEnvoi != NULL){
