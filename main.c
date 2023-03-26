@@ -22,6 +22,8 @@ int main(int argc , char *argv[])
     char *message20 = "ERROR 20 : Out of Quota\n";
     char *message10 = "ERROR 10 : Bad command\n";
 
+    char messageTaille[10] = "";
+
     int c;
     int port = 5000;
     char *pvalue = NULL;
@@ -147,13 +149,11 @@ int main(int argc , char *argv[])
                      
                     close( sd );
                     remove_client(&clients, current->socket);
-                }
-                 
+                }               
                 else{
 
                     buffer[valread] = '\0';
                     printf("Message reçu : %s (%d octets)\n\n", buffer, valread);
-                    //printf("%s\n", buffer);
 
                     if(strncmp(buffer, "/setPixel", 9) == 0){ //verification de la commande
                         char *decoupe = strtok(buffer, " ");
@@ -182,9 +182,6 @@ int main(int argc , char *argv[])
                                 largeur = atoi(tabdonnees2[1]);
                                 hauteur = atoi(tabdonnees2[2]);
 
-                                printf("largeur %d\n", largeur);
-                                printf("hauteur %d\n", hauteur);
-
                                 //utilisation de la fonction
                                 
                                 int verif = 0;
@@ -200,7 +197,6 @@ int main(int argc , char *argv[])
                                     }
                                 }
                                 else if(verif == 3){
-                                    printf("pas bon ca verif vaut 3\n");
                                     if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
                                         perror("send");
                                     }
@@ -228,6 +224,47 @@ int main(int argc , char *argv[])
                             strcpy(&tabdonnees[i][60], "");
                             strcpy(&tabdonnees2[i][60], "");
                         }
+                    }
+                    else if(strncmp(buffer, "/getMatrix", 9) == 0){ //verification de la commande
+                        //appel de la Fonction getMatrix 
+                    }
+                    else if(strncmp(buffer, "/getSize", 8) == 0){ //verification de la commande
+                        if(strcmp(&buffer[9], "") == 0){
+                            //Conversion des int en chaine de caractère puis envoie de la chaine au client
+                            //largeur
+                            char msgLarge[10];
+                            sprintf(msgLarge, "%d", NB_COLONNE);
+                            //hauteur 
+                            char msgHaut[10]; 
+                            sprintf(msgHaut, "%d", NB_LIGNE);
+                            //Création de la chaine de caractère
+                            strncat(messageTaille, msgLarge, 5);
+                            strncat(messageTaille, "x", 2);
+                            strncat(messageTaille, msgHaut, 5);
+                            //Envoie du message
+                            if( send(new_socket, messageTaille, strlen(messageTaille), 0) != strlen(messageTaille)){ //envoie le message d'erreur bad command
+                                perror("send");
+                            }
+                        }
+                        else{
+                            if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
+                                perror("send");
+                            }
+                        }
+                        
+                        
+                    }
+                    else if(strncmp(buffer, "/getLimits", 10) == 0){ //verification de la commande
+                        //appel de la Fonction getLimits
+                        getLimits();
+                    }
+                    else if(strncmp(buffer, "/getVersion", 11) == 0){ //verification de la commande
+                        //appel de la Fonction getVersion 
+                        getVersion();
+                    }
+                    else if(strncmp(buffer, "/getWaitTime", 12) == 0){ //verification de la commande
+                        //appel de la Fonction getWaitTime 
+
                     }
                     else{
                         if( send(new_socket, message99, strlen(message99), 0) != strlen(message99)){
