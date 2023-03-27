@@ -156,14 +156,6 @@ void setPixel(couleur matrice[NB_LIGNE][NB_COLONNE], int hauteur, int largeur, i
     strcpy(matrice[hauteur][largeur].ASCII, base64_output);
 }
 
-void getSize(){
-    printf("%d x %d\n",NB_LIGNE, NB_COLONNE);
-}
-
 void getLimits(){
     printf("Vous pouvez changer %d max par minutes\n", PIXEL_PER_MINUTE_MAX);
-}
-
-void getVersion(){
-    printf("Version actuelle : %d.0\n",VERSION);
 }

@@ -47,6 +47,4 @@ char* intToBinary(int n,int decal,char *binary);
 void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
 void setPixel(couleur matrice[NB_LIGNE][NB_COLONNE], int hauteur, int largeur, int R, int G, int B);
-void getSize();
 void getLimits();
-void getVersion();

@@ -22,7 +22,9 @@ int main(int argc , char *argv[])
     char *message20 = "ERROR 20 : Out of Quota\n";
     char *message10 = "ERROR 10 : Bad command\n";
 
-    char messageTaille[10] = "";
+    char messageTaille[40] = "Taille de la matrice : ";
+    char messageVersion[20] = "Version ";
+    char Version[5] = "";
 
     int c;
     int port = 5000;
@@ -207,7 +209,6 @@ int main(int argc , char *argv[])
                                     }
                                 }
                                 
-                                
                             }
                             else{ 
                                 if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
@@ -242,7 +243,7 @@ int main(int argc , char *argv[])
                             strncat(messageTaille, "x", 2);
                             strncat(messageTaille, msgHaut, 5);
                             //Envoie du message
-                            if( send(new_socket, messageTaille, strlen(messageTaille), 0) != strlen(messageTaille)){ //envoie le message d'erreur bad command
+                            if( send(new_socket, messageTaille, strlen(messageTaille), 0) != strlen(messageTaille)){ //envoie le message contenant la taille
                                 perror("send");
                             }
                         }
@@ -255,12 +256,31 @@ int main(int argc , char *argv[])
                         
                     }
                     else if(strncmp(buffer, "/getLimits", 10) == 0){ //verification de la commande
-                        //appel de la Fonction getLimits
-                        getLimits();
+                        if(strcmp(&buffer[11], "") == 0){ //verification qu'il y a uniquement la commande
+                            //getLimits();
+                        }
+                        else{
+                            if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
+                                perror("send");
+                            }
+                        }
+                        
                     }
                     else if(strncmp(buffer, "/getVersion", 11) == 0){ //verification de la commande
-                        //appel de la Fonction getVersion 
-                        getVersion();
+                        if(strcmp(&buffer[12], "") == 0){ //verification qu'il y a uniquement la commande
+                            //conversion en char
+                            sprintf(Version,"%d", VERSION);
+                            strncat(messageVersion, Version, 2);
+                            //envoie du message
+                            if( send(new_socket, messageVersion, strlen(messageVersion), 0) != strlen(messageVersion)){ //envoie le message de Version
+                                perror("send");
+                            }
+                        }
+                        else{
+                            if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
+                                perror("send");
+                            }
+                        }
                     }
                     else if(strncmp(buffer, "/getWaitTime", 12) == 0){ //verification de la commande
                         //appel de la Fonction getWaitTime 
