@@ -25,6 +25,7 @@ int main(int argc , char *argv[])
     char messageTaille[40] = "Taille de la matrice : ";
     char messageVersion[20] = "Version ";
     char Version[5] = "";
+    char messageLimit[10] = "";
 
     int c;
     int port = 5000;
@@ -91,7 +92,7 @@ int main(int argc , char *argv[])
                 abort();
         }
     }
-    
+
     if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0){
         perror("erreur socket");
         exit(-1);
@@ -287,7 +288,10 @@ int main(int argc , char *argv[])
                     }
                     else if(strncmp(buffer, "/getLimits", 10) == 0){ //verification de la commande
                         if(strcmp(&buffer[11], "") == 0){ //verification qu'il y a uniquement la commande
-                            //getLimits();
+                            sprintf(messageLimit,"%d", rate_limit);
+                            if( send(new_socket, messageLimit, strlen(messageLimit), 0) != strlen(messageLimit)){ //envoie le message de limite
+                                perror("send");
+                            }
                         }
                         else{
                             if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
