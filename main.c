@@ -38,16 +38,46 @@ int main(int argc , char *argv[])
     char tabdonnees2[5][60] = {"", "", "", "", ""};
     int hauteur = 0;
     int largeur = 0;
+    char largeHaut[10][20] = {"", "", "", "", "", ""};
+    int HMatrice = 40; //hauteur de la matrice
+    int LMatrice = 80; //largeur de la matrice
+    char *prate_limit = NULL;
+    int rate_limit = 10;
+
 
     
-    while((c = getopt(argc, argv, "p:")) != -1){
+    while((c = getopt(argc, argv, "p: s: l:")) != -1){
         switch(c){
             case 'p':
                 pvalue = optarg;
                 port = atoi(pvalue);
                 break;
+            case 's':
+                //decoupage de ce que l'on a recupéré 
+                char *decoupeHauteurLargeur = strtok(optarg, "x");
+                int rg = 0;
+                while(decoupeHauteurLargeur != NULL){
+                    strcpy(&largeHaut[rg][20], decoupeHauteurLargeur);
+                    decoupeHauteurLargeur = strtok(NULL, " ");
+                    rg++;
+                }
+                //assignation du découpe aux variables correspondantes
+                LMatrice = atoi(largeHaut[1]);
+                HMatrice = atoi(largeHaut[2]);
+
+                break;
+            case 'l':
+                prate_limit = optarg;
+                rate_limit = atoi(prate_limit);
+                break;
             case '?':
                 if (optopt == 'p'){
+                    fprintf (stderr, "l'option -%c necessite un argument.\n", optopt);
+                }
+                else if (optopt == 's'){
+                    fprintf (stderr, "l'option -%c necessite un argument.\n", optopt);
+                }
+                else if (optopt == 'l'){
                     fprintf (stderr, "l'option -%c necessite un argument.\n", optopt);
                 }
                 else if(isprint(optopt)){
@@ -61,7 +91,7 @@ int main(int argc , char *argv[])
                 abort();
         }
     }
-     
+    
     if( (master_socket = socket(AF_INET , SOCK_STREAM , 0)) == 0){
         perror("erreur socket");
         exit(-1);
