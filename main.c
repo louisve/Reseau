@@ -29,7 +29,7 @@ int main(int argc , char *argv[])
     int c;
     int port = 5000;
     char *pvalue = NULL;
-    couleur matrice[NB_LIGNE][NB_COLONNE];
+    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
     initMatrice(matrice);
     char colorpx[50] = "";
     char tabdonnees[5][60] = {"", "", "", "", ""};

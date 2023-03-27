@@ -45,6 +45,7 @@ void remove_client(Client **head, int socket) {
     }
 }
 
+
 void print_clients(Client *head) {
     printf("Connected clients: ");
     while (head != NULL) {
@@ -54,22 +55,25 @@ void print_clients(Client *head) {
     printf("\n");
 }
 
-void initMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]){
+
+void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
-            strcpy(matrice[i][j].ASCII, "////");
+            strcpy(matrice[i][j], "////");
         }
     }
 }
 
-void afficheMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]){
+
+void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
-            printf("[%s]",matrice[i][j].ASCII);
+            printf("[%s]",matrice[i][j]);
         }
         printf("\n");
     }
 }
+
 
 char* intToBinary(int n,int decal,char *binary) {
     
@@ -83,6 +87,7 @@ char* intToBinary(int n,int decal,char *binary) {
     return binary;
 }
 
+
 char * rgbToBinary(int r, int g, int b){
     char* binary = (char*)malloc(25 * sizeof(char));
     memset(binary, '0', 24);
@@ -94,6 +99,7 @@ char * rgbToBinary(int r, int g, int b){
 
     return binary;
 }
+
 
 void binary_to_base64(char* binary,  char* base64_output) {
     char* base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"; // Tableau de conversion base64
@@ -141,19 +147,53 @@ void binary_to_base64(char* binary,  char* base64_output) {
 }
 
 
-void setPixel(couleur matrice[NB_LIGNE][NB_COLONNE], int hauteur, int largeur, int R, int G, int B){
+char* base64_to_binary(char* base64_string) {
+    // Tableau de conversion base64 -> décimal
+    const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    int base64_values[256];
+    memset(base64_values, -1, sizeof(base64_values));
+    for (int i = 0; i < 64; i++) {
+        base64_values[base64_chars[i]] = i;
+    }
+    
+    // Décoder la chaîne base64 en bytes
+    int decoded_bytes[3];
+    decoded_bytes[0] = base64_values[base64_string[0]];
+    decoded_bytes[1] = base64_values[base64_string[1]];
+    decoded_bytes[2] = base64_values[base64_string[2]];
+    decoded_bytes[3] = base64_values[base64_string[3]];
+    
+    // Convertir chaque byte en sa représentation binaire
+    char* binary_string = (char*) malloc(24 * sizeof(char));
+    int k = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 5; j >= 0; j--) {
+            binary_string[k++] = ((decoded_bytes[i] >> j) & 1) ? '1' : '0';
+        }
+    }
+    
+    return binary_string;
+}
 
-    matrice[hauteur][largeur].R = R;
-    matrice[hauteur][largeur].G = G;
-    matrice[hauteur][largeur].B = B;
+
+void binary_to_rgb(char* binary_string, int* R, int* G, int* B) {
+    // Convertir la chaîne binaire en valeurs décimales
+    int r = 0, g = 0, b = 0;
+    for (int i = 0; i < 8; i++) {
+        r += (binary_string[i] - '0') * pow(2, 7 - i);
+        g += (binary_string[i + 8] - '0') * pow(2, 7 - i);
+        b += (binary_string[i + 16] - '0') * pow(2, 7 - i);
+    }
+    
+    // Assigner les valeurs à chaque canal de couleur
+    *R = r;
+    *G = g;
+    *B = b;
+}
 
 
-    char* binary = rgbToBinary(R, G, B);
-    char base64_output[20];
-    binary_to_base64(binary, base64_output);
-    free(binary); // ne pas oublier de libérer la mémoire allouée avec malloc
-
-    strcpy(matrice[hauteur][largeur].ASCII, base64_output);
+void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64){
+    strcpy(matrice[hauteur][largeur], base64);
 }
 
 void getLimits(){

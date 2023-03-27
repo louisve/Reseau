@@ -10,6 +10,8 @@
 #include <sys/time.h>
 #include <ctype.h>
 #include <getopt.h>
+#include <math.h>
+ 
  
 #define TRUE   1
 #define FALSE  0
@@ -21,18 +23,12 @@
 #define PIXEL_PER_MINUTE_MAX 12 
 #define VERSION 1
 
+
 struct CLIENT {
     int socket;
     struct CLIENT *next;
 };
 
-
-struct COULEUR {
-    char ASCII[20];
-    int R;
-    int G;
-    int B;
-};
 
 typedef struct CLIENT Client;
 typedef struct COULEUR couleur;
@@ -41,10 +37,12 @@ typedef struct COULEUR couleur;
 void add_client(Client **head, int socket);
 void remove_client(Client **head, int socket);
 void print_clients(Client *head);
-void initMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]);
-void afficheMatrice(couleur matrice[NB_LIGNE][NB_COLONNE]);
+void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
+void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
 char* intToBinary(int n,int decal,char *binary);
 void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
-void setPixel(couleur matrice[NB_LIGNE][NB_COLONNE], int hauteur, int largeur, int R, int G, int B);
+char* base64_to_binary(char* base64_string);
+void binary_to_rgb(char* binary_string, int* R, int* G, int* B);
+void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64);
 void getLimits();
