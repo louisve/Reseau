@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -std=gnu99
-LDFLAGS=-lSDL2
+LDFLAGS=-lSDL2 -lm
 
 SRC=Client.c ../pixel.c affichage.c
 OBJ=$(SRC:.c=.o)

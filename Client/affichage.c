@@ -2,24 +2,24 @@
 
 // fonction qui dessine la grille
 void drawGrid(SDL_Renderer* renderer, SDL_Color color){
-    int GRID_WIDTH = GRID_MAX_WIDTH / NB_COLONNE;
-    int GRID_HEIGHT = GRID_MAX_HEIGHT / NB_LIGNE;
+    int GRID_WIDTH = round(GRID_MAX_WIDTH / NB_COLONNE);
+    int GRID_HEIGHT = round(GRID_MAX_HEIGHT / NB_LIGNE);
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
     // dessine les lignes verticales
-    for(int i = 0; i <= GRID_MAX_WIDTH ; i += GRID_WIDTH)
+    for(int i = 0; i <= NB_COLONNE*GRID_WIDTH ; i += GRID_WIDTH)
     {
-        SDL_RenderDrawLine(renderer, i, 0, i, GRID_MAX_HEIGHT);
+        SDL_RenderDrawLine(renderer, i, 0, i, NB_LIGNE*GRID_HEIGHT);
     }
     
     // dessine les lignes horizontales
-    for(int j = 0; j <= GRID_MAX_HEIGHT; j += GRID_HEIGHT)
+    for(int j = 0; j <= NB_LIGNE*GRID_HEIGHT ; j += GRID_HEIGHT)
     {
-        SDL_RenderDrawLine(renderer, 0, j, GRID_MAX_WIDTH, j);
+        SDL_RenderDrawLine(renderer, 0, j, NB_COLONNE*GRID_WIDTH, j);
     }
 }
 
-// fonction qui colorie la case sélectionnée en rouge
+// fonction qui entoure la case selctionnée en noir
 void selectCase(SDL_Renderer* renderer, int x, int y, SDL_Color color, int* i, int* j){
     int GRID_WIDTH = GRID_MAX_WIDTH / NB_COLONNE;
     int GRID_HEIGHT = GRID_MAX_HEIGHT / NB_LIGNE;
@@ -30,23 +30,28 @@ void selectCase(SDL_Renderer* renderer, int x, int y, SDL_Color color, int* i, i
     // calcule les coordonnées de la case sélectionnée
     int x1 = *i * GRID_WIDTH;
     int y1 = *j * GRID_HEIGHT;
-    int x2 = x1 + GRID_WIDTH - 1;
-    int y2 = y1 + GRID_HEIGHT - 1;
+    int x2 = x1 + GRID_WIDTH ;
+    int y2 = y1 + GRID_HEIGHT;
     
-    // dessine un rectangle rouge dans la case sélectionnée
+    // dessine un rectangle noir dans la case sélectionnée
     SDL_Rect rect = {x1, y1, x2 - x1 + 1, y2 - y1 + 1};
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_RenderDrawRect(renderer, &rect);
 }
 
-// void initCases(SDL_Renderer* renderer, char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
-
-//     for(int i = 0; i <= NB_LIGNE, i++){
-//         for(int j = 0, j <= NB_COLONNE, j++){
-//             colorCell(renderer, i, j,color);
-//         }
-//     }
-// }
+void colorCase(SDL_Renderer* renderer, int i, int j,SDL_Color color){
+   
+    int GRID_WIDTH = GRID_MAX_WIDTH / NB_COLONNE;
+    int GRID_HEIGHT = GRID_MAX_HEIGHT / NB_LIGNE;
+    // calcule les indices de la case sélectionnée
+    int x = j* GRID_WIDTH;
+    int y = i * GRID_HEIGHT;
+    
+    // dessine un rectangle dans la case i,j
+    SDL_Rect rect = {x, y, GRID_WIDTH , GRID_HEIGHT };
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(renderer,&rect);
+}
 
 void palette(SDL_Renderer* renderer){
 
@@ -157,7 +162,8 @@ int setWindowColor(SDL_Renderer *renderer, SDL_Color color){
     return 0;  
 }
 
-void affichage(char* chaine64,int* i, int* j){
+
+int affichage(char* chaine64,int* i, int* j, int envoie){
     // initialise SDL
     SDL_Init(SDL_INIT_VIDEO);
     
@@ -167,7 +173,10 @@ void affichage(char* chaine64,int* i, int* j){
     // crée un rendu de la fenêtre
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     
+    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];    
+    initMatrice(matrice);
 
+    
     //Couleurs 
     SDL_Color bleu = {0,0,255,255};
     SDL_Color vert = {0,255,0,255};
@@ -180,18 +189,52 @@ void affichage(char* chaine64,int* i, int* j){
     SDL_Color gris = {200,200,200,255};
 
     // dessine le fond en noir
-    setWindowColor(renderer, blanc);
+    setWindowColor(renderer, noir);
     SDL_RenderClear(renderer);
-        
+
+    
+    palette(renderer);
+    bouton(renderer,gris);
+    int a;
+    int b;
+    for(a = 0; a < NB_LIGNE; a++){
+        for(b = 0; b < NB_COLONNE; b++){
+            if(strcmp("AAD/",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,bleu);
+            }
+            else if(strcmp("AP8A",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,vert);
+            }
+            else if(strcmp("/wAA",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,rouge);
+            }
+            else if(strcmp("AAAA",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,noir);
+            }
+            else if(strcmp("/wD/",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,magenta);
+            }
+            else if(strcmp("AP//",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,cyan);
+            }
+            else if(strcmp("//8A",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,jaune);
+            }
+            else if(strcmp("////",matrice[a][b]) == 0){
+                colorCase(renderer, a, b,blanc);
+            }
+        }
+    }
+    
     // dessine la grille
     drawGrid(renderer,gris);
 
-    palette(renderer);
-    bouton(renderer,gris);
+    
     SDL_RenderPresent(renderer);
     // boucle principale
     SDL_Event event;
     int running = 1;
+
     while(running)
     {
         // gère les événements
@@ -208,15 +251,15 @@ void affichage(char* chaine64,int* i, int* j){
                 case SDL_MOUSEBUTTONDOWN:
                     if(event.button.button == SDL_BUTTON_LEFT )
                     {
-                        if(event.button.x <= GRID_MAX_WIDTH && event.button.y <= GRID_MAX_HEIGHT){
-                            SDL_SetRenderDrawColor(renderer, 255,255,255,255);
-                            SDL_Rect fondMatrice = {0,0,GRID_MAX_WIDTH,GRID_MAX_HEIGHT};
-                            SDL_RenderFillRect(renderer, &fondMatrice);
+                         if(event.button.x <= round(GRID_MAX_WIDTH / NB_COLONNE)*NB_COLONNE && event.button.y <= round(GRID_MAX_HEIGHT / NB_LIGNE)*NB_LIGNE){
+                        //     SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+                        //     SDL_Rect fondMatrice = {0,0,GRID_MAX_WIDTH,GRID_MAX_HEIGHT};
+                            //SDL_RenderFillRect(renderer, &fondMatrice);
                             drawGrid(renderer,gris);
                             SDL_RenderPresent(renderer);
                             selectCase(renderer, event.button.x, event.button.y,noir,i,j);
                             SDL_RenderPresent(renderer);
-                            printf("Case selectionnée : i = %d, j = %d\n",*i,*j);
+                            //printf("Case selectionnée : i = %d, j = %d\n",*i,*j);
                         }
                         else if(event.button.x <= START_X_PALLETTE + (4*COTE_PALETTE) && event.button.y <= START_Y_PALETTE+(2*COTE_PALETTE) && event.button.x >= START_X_PALLETTE && event.button.y >= START_Y_PALETTE){
                             
@@ -255,6 +298,15 @@ void affichage(char* chaine64,int* i, int* j){
                                 bouton(renderer, blanc);
                                 SDL_RenderPresent(renderer);
                             }
+                        }
+                        else if(event.button.x <= START_X_BOUTON + LARGEUR_BOUTON && event.button.y <= START_Y_BOUTON + HAUTEUR_BOUTON && event.button.x >= START_X_BOUTON && event.button.y >= START_Y_BOUTON){
+                            if(strcmp("////",chaine64) == 0 || strcmp("//8A",chaine64) == 0 || strcmp("AP//",chaine64) == 0 || strcmp("/wD/",chaine64) == 0 || strcmp("AAAA",chaine64) == 0 || strcmp("/wAA",chaine64) == 0 || strcmp("AP8A",chaine64) == 0 || strcmp("AAD/",chaine64) == 0 ){
+                               envoie = 1;
+                               running = 0;
+                            }
+                            else{
+                                printf("rien\n");
+                            }
                             
                         }
                     }
@@ -275,6 +327,8 @@ void affichage(char* chaine64,int* i, int* j){
     if(NULL != window)
         SDL_DestroyWindow(window);
     SDL_Quit();
+
+return envoie;
 }
 
 void bouton(SDL_Renderer* renderer, SDL_Color color){
