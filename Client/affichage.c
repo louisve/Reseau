@@ -234,6 +234,8 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
     // boucle principale
     SDL_Event event;
     int running = 1;
+    int etat = 0;
+    int etat2 = 0;
 
     while(running)
     {
@@ -260,6 +262,7 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
                             selectCase(renderer, event.button.x, event.button.y,noir,i,j);
                             SDL_RenderPresent(renderer);
                             //printf("Case selectionnée : i = %d, j = %d\n",*i,*j);
+                            etat2 += 1;
                         }
                         else if(event.button.x <= START_X_PALLETTE + (4*COTE_PALETTE) && event.button.y <= START_Y_PALETTE+(2*COTE_PALETTE) && event.button.x >= START_X_PALLETTE && event.button.y >= START_Y_PALETTE){
                             
@@ -269,38 +272,46 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
                             if(strcmp("AAD/",chaine64) == 0){
                                 bouton(renderer, bleu);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("AP8A",chaine64) == 0){
                                 bouton(renderer, vert);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("/wAA",chaine64) == 0){
                                 bouton(renderer, rouge);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("AAAA",chaine64) == 0){
                                 bouton(renderer, noir);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("/wD/",chaine64) == 0){
                                 bouton(renderer, magenta);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("AP//",chaine64) == 0){
                                 bouton(renderer, cyan);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("//8A",chaine64) == 0){
                                 bouton(renderer, jaune);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                             else if(strcmp("////",chaine64) == 0){
                                 bouton(renderer, blanc);
                                 SDL_RenderPresent(renderer);
+                                etat += 1;
                             }
                         }
                         else if(event.button.x <= START_X_BOUTON + LARGEUR_BOUTON && event.button.y <= START_Y_BOUTON + HAUTEUR_BOUTON && event.button.x >= START_X_BOUTON && event.button.y >= START_Y_BOUTON){
-                            if(strcmp("////",chaine64) == 0 || strcmp("//8A",chaine64) == 0 || strcmp("AP//",chaine64) == 0 || strcmp("/wD/",chaine64) == 0 || strcmp("AAAA",chaine64) == 0 || strcmp("/wAA",chaine64) == 0 || strcmp("AP8A",chaine64) == 0 || strcmp("AAD/",chaine64) == 0 ){
+                            if(etat >= 1 && etat2 >= 1){
                                envoie = 1;
                                running = 0;
                             }
@@ -314,8 +325,6 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
                     break;
             }
         }
-        
-        
         
         // met à jour l'affichage
         SDL_RenderPresent(renderer);
