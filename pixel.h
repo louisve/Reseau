@@ -16,7 +16,7 @@
 #define TRUE   1
 #define FALSE  0
 #define PORT 5000
-#define LG_MESSAGE 256
+#define LG_MESSAGE  100000
 #define NB_COLONNE 80
 #define NB_LIGNE 40
 #define TAILLE_MAX_CHAINE 20

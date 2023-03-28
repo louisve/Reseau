@@ -27,7 +27,7 @@ void selectCase(SDL_Renderer* renderer, int x, int y, SDL_Color color, int* i, i
 void palette(SDL_Renderer* renderer);
 char* selectCouleur(int x, int y, char* chaine64);
 int setWindowColor(SDL_Renderer *renderer, SDL_Color color);
-int affichage(char* chaine64,int* i, int* j, int envoie);
+int affichage(char* chaine64,int* i, int* j, int envoie,char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
 char* intToBinary(int n,int decal,char *binary);
 void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);

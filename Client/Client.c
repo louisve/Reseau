@@ -7,10 +7,15 @@ int main(int argc , char *argv[]){
     struct sockaddr_in pointDeRencontreDistant;
     socklen_t longueurAdresse;
     char messageEnvoi[LG_MESSAGE];
-    char messageRecu[LG_MESSAGE];
+    char messageRecu[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
     int ecrits, c, lus;
     int port = 5000;
     char *pvalue = NULL;
+    int envoie  = 0;
+
+    char* chaine64 = malloc(sizeof(char*));
+    int* i = malloc(sizeof(int*));
+    int* j = malloc(sizeof(int*));
 
     descripteurSocket = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -55,14 +60,13 @@ int main(int argc , char *argv[]){
     }
     printf("Connexion au serveur réussie avec succès !\n");
 
+
     memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
-    memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char));
+    //memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char*));
+    memset(messageRecu, 0, sizeof(messageRecu));
 
 
     while(TRUE){
-    char* chaine64 = malloc(sizeof(char*));
-    int* i = malloc(sizeof(int*));
-    int* j = malloc(sizeof(int*));
     
         fgets(messageEnvoi, 256, stdin);
         if(messageEnvoi != NULL){
@@ -80,9 +84,10 @@ int main(int argc , char *argv[]){
             return 0;
             
         }
+        
         int setPixel;
         /* Reception des données du serveur */
-        lus = read(descripteurSocket, messageRecu, LG_MESSAGE*sizeof(char)); /* attend un message de TAILLE fixe */
+        lus = recv(descripteurSocket, messageRecu, LG_MESSAGE*sizeof(char*),0); /* attend un message de TAILLE fixe */
         switch(lus){
             case -1 : /* une erreur ! */
                 perror("read");
@@ -93,11 +98,17 @@ int main(int argc , char *argv[]){
                 close(descripteurSocket);
                 return 0;
             default: /* réception de n octets */
-                printf("Message reçu du serveur : \n%s \n", messageRecu);
-                int envoie  = 0;
-                envoie = affichage(chaine64,i,j,envoie);
+           
+                int r = 0;
+                int t = 0;
+            
+                printf("Message reçu du serveur : \n%s \n", messageRecu[r][t]);
+                // if(strlen(messageRecu[0][1]) == 4){
+                //     afficheMatrice(messageRecu);
+                // }
+          
+                envoie = affichage(chaine64,i,j,envoie, messageRecu);
                 if(envoie == 1){
-                    printf("setPixel 1\n");
                     char a[5] = "";
                     char b[5] = "";
                     char mess[50] = "";

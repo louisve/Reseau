@@ -163,7 +163,7 @@ int setWindowColor(SDL_Renderer *renderer, SDL_Color color){
 }
 
 
-int affichage(char* chaine64,int* i, int* j, int envoie){
+int affichage(char* chaine64,int* i, int* j, int envoie,char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     // initialise SDL
     SDL_Init(SDL_INIT_VIDEO);
     
@@ -171,11 +171,7 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
     SDL_Window* window = SDL_CreateWindow("PIXEL WAR", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     
     // crée un rendu de la fenêtre
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    
-    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];    
-    initMatrice(matrice);
-
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);  
     
     //Couleurs 
     SDL_Color bleu = {0,0,255,255};
@@ -189,7 +185,7 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
     SDL_Color gris = {200,200,200,255};
 
     // dessine le fond en noir
-    setWindowColor(renderer, noir);
+    setWindowColor(renderer, blanc);
     SDL_RenderClear(renderer);
 
     
@@ -197,34 +193,37 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
     bouton(renderer,gris);
     int a;
     int b;
-    for(a = 0; a < NB_LIGNE; a++){
-        for(b = 0; b < NB_COLONNE; b++){
-            if(strcmp("AAD/",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,bleu);
+    if(strlen(matrice[0][1]) == 4){
+        for(a = 0; a < NB_LIGNE; a++){
+            for(b = 0; b < NB_COLONNE; b++){
+                if(strcmp("AAD/",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,bleu);
+                }
+                else if(strcmp("AP8A",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,vert);
+                }
+                else if(strcmp("/wAA",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,rouge);
+                }
+                else if(strcmp("AAAA",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,noir);
+                }
+                else if(strcmp("/wD/",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,magenta);
+                }
+                else if(strcmp("AP//",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,cyan);
+                }
+                else if(strcmp("//8A",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,jaune);
+                }
+                else if(strcmp("////",matrice[a][b]) == 0){
+                    colorCase(renderer, a, b,blanc);
+                }
             }
-            else if(strcmp("AP8A",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,vert);
-            }
-            else if(strcmp("/wAA",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,rouge);
-            }
-            else if(strcmp("AAAA",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,noir);
-            }
-            else if(strcmp("/wD/",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,magenta);
-            }
-            else if(strcmp("AP//",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,cyan);
-            }
-            else if(strcmp("//8A",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,jaune);
-            }
-            else if(strcmp("////",matrice[a][b]) == 0){
-                colorCase(renderer, a, b,blanc);
-            }
-        }
+        }              
     }
+    
     
     // dessine la grille
     drawGrid(renderer,gris);
@@ -321,7 +320,6 @@ int affichage(char* chaine64,int* i, int* j, int envoie){
                             
                         }
                     }
-
                     break;
             }
         }

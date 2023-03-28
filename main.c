@@ -257,9 +257,6 @@ int main(int argc , char *argv[])
                             strcpy(&tabdonnees2[i][60], "");
                         }
                     }
-                    else if(strncmp(buffer, "/getMatrix", 9) == 0){ //verification de la commande
-                        //appel de la Fonction getMatrix 
-                    }
                     else if(strncmp(buffer, "/getSize", 8) == 0){ //verification de la commande
                         if(strcmp(&buffer[9], "") == 0){
                             //Conversion des int en chaine de caractère puis envoie de la chaine au client
@@ -276,6 +273,7 @@ int main(int argc , char *argv[])
                             //Envoie du message
                             if( send(new_socket, messageTaille, strlen(messageTaille), 0) != strlen(messageTaille)){ //envoie le message contenant la taille
                                 perror("send");
+                                
                             }
                         }
                         else{
@@ -320,6 +318,21 @@ int main(int argc , char *argv[])
                         //appel de la Fonction getWaitTime 
 
                     }
+                    else if(strncmp(buffer, "/getMatrix", 10) == 0){ //verification de la commande 
+                        printf("JE SUIS DANS GETMATRIX\n");
+                        if(strcmp(&buffer[11], "") == 0){
+                            int total_sent = 0;
+                            int bytes_left = NB_LIGNE*NB_COLONNE;
+                            if( send(new_socket,matrice,sizeof(matrice), 0) != strlen(message10)){ //envoie le message d'erreur bad command
+                                perror("send");
+                            }
+                        }
+                        else{
+                            if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
+                                perror("send");
+                            }
+                        }
+                    }
                     else{
                         if( send(new_socket, message99, strlen(message99), 0) != strlen(message99)){
                             perror("send");
@@ -332,17 +345,6 @@ int main(int argc , char *argv[])
         }
 
     }
-
-
-    //  char* binary = rgbToBinary(255,255,255);
-    // printf("en binaire est : %s\n", binary);
-
-    // char base64_output[20]; // Chaîne de sortie pour le résultat en base64
-    // binary_to_base64(binary, base64_output);
-    // printf("Base64: %s\n", base64_output);
-    // free(binary); // ne pas oublier de libérer la mémoire allouée avec malloc
-
-
     return 0;
 }
 

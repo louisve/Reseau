@@ -11,8 +11,7 @@
 #include <SDL2/SDL.h>
 #include "../pixel.h"
 
-
-#define LG_MESSAGE 256
+#define LG_MESSAGE  100000
 #define TRUE 1
 
 

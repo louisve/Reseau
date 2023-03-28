@@ -59,7 +59,7 @@ void print_clients(Client *head) {
 void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
-            strcpy(matrice[i][j], "////");
+            strcpy(matrice[i][j], "AAAA");
         }
     }
 }
