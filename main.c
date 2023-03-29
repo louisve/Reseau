@@ -30,9 +30,7 @@ int main(int argc , char *argv[])
     int c;
     int port = 5000;
     char *pvalue = NULL;
-    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
-    initMatrice(matrice);
-    char colorpx[50] = "";
+    char *colorpx = malloc(50*sizeof(char));
     char tabdonnees[5][60] = {"", "", "", "", ""};
     int rgwhile = 0;
     char coordonnees[10] = "";
@@ -44,6 +42,8 @@ int main(int argc , char *argv[])
     int LMatrice = 80; //largeur de la matrice
     char *prate_limit = NULL;
     int rate_limit = 10;
+    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
+    initMatrice(matrice);
 
 
     
@@ -188,73 +188,80 @@ int main(int argc , char *argv[])
                     buffer[valread] = '\0';
                     printf("Message reçu : %s (%d octets)\n\n", buffer, valread);
 
-                    if(strncmp(buffer, "/setPixel", 9) == 0){ //verification de la commande
-                        char *decoupe = strtok(buffer, " ");
-                        while(decoupe != NULL){
-                            strcpy(&tabdonnees[rgwhile][60], decoupe);
-                            decoupe = strtok(NULL, " ");
-                            rgwhile++;
-                        }
-                        rgwhile = 0;
-                        if(strcmp(tabdonnees[3], "") != 0 || strcmp(tabdonnees[2], "") != 0){ //verification de ce qu'il y a après la commande
-                            
-                            //Pour mettre la couleur et les coordonnées dans des variables plus adaptées
-                            strcpy(colorpx, tabdonnees[3]);
-                            strcpy(coordonnees, tabdonnees[2]);
-
-                            //Pour decouper les coordonnees 
-                            char *decoupe = strtok(coordonnees, "x");
+                    if(strncmp(buffer, "/setPixel ", 10) == 0){ //verification de la commande
+                            char *decoupe = strtok(buffer, " ");
                             while(decoupe != NULL){
-                                strcpy(&tabdonnees2[rgwhile][60], decoupe);
+                                strcpy(&tabdonnees[rgwhile][60], decoupe);
                                 decoupe = strtok(NULL, " ");
                                 rgwhile++;
                             }
-                            if(strcmp(tabdonnees2[1], "") != 0 || strcmp(tabdonnees2[2], "") != 0){ //verifie la syntaxe de saisie des coordonnées
-
-                                //convertir en int les coordonnées 
-                                largeur = atoi(tabdonnees2[1]);
-                                hauteur = atoi(tabdonnees2[2]);
-
-                                //utilisation de la fonction
+                            rgwhile = 0;
+                            if(strcmp(tabdonnees[3], "") != 0 || strcmp(tabdonnees[2], "") != 0){ //verification de ce qu'il y a après la commande
                                 
-                                int verif = 0;
-                                // verif = setPixel(matrice, hauteur, largeur, colorpx);
-                                if(verif == 1){
-                                    if( send(new_socket, message11, strlen(message11), 0) != strlen(message11)){ //envoie le message d'erreur out of bound
-                                        perror("send"); 
-                                    }
+                                //Pour mettre la couleur et les coordonnées dans des variables plus adaptées
+                                strcpy(colorpx, tabdonnees[3]);
+                                strcpy(coordonnees, tabdonnees[2]);
+
+                                //Pour decouper les coordonnees 
+                                char *decoupe = strtok(coordonnees, "x");
+                                while(decoupe != NULL){
+                                    strcpy(&tabdonnees2[rgwhile][60], decoupe);
+                                    decoupe = strtok(NULL, " ");
+                                    rgwhile++;
                                 }
-                                else if(verif == 2){
-                                    if( send(new_socket, message12, strlen(message12), 0) != strlen(message12)){ //envoie le message d'erreur bad color
-                                        perror("send");
+                                if(strcmp(tabdonnees2[1], "") != 0 || strcmp(tabdonnees2[2], "") != 0){ //verifie la syntaxe de saisie des coordonnées
+
+                                    //convertir en int les coordonnées 
+                                    largeur = atoi(tabdonnees2[1]);
+                                    hauteur = atoi(tabdonnees2[2]);
+
+                                    if(hauteur > NB_LIGNE ||  largeur > NB_COLONNE){
+                                        if( send(new_socket, message11, strlen(message11), 0) != strlen(message11)){ //envoie le message d'erreur out of bound
+                                            perror("send"); 
+                                        }
                                     }
+                                    else{
+                                        //utilisation de la fonction
+                                        int verif = 0;
+                                        verif = setPixel(matrice, hauteur, largeur, colorpx);
+                                        if(verif == 0){ //si toute les verification sont bonnes alors on envoie commande executée
+                                            if( send(new_socket, message00, strlen(message00), 0) != strlen(message00)){ //envoie le message commande executé
+                                                perror("send"); 
+                                            }
+                                        }
+                                        else{ //la couleur n'est pas bonne
+                                            if( send(new_socket, message12, strlen(message12), 0) != strlen(message12)){ //envoie le message d'erreur bad color
+                                                perror("send"); 
+                                            }
+                                        }
+
+                                    }
+                                    for(int i = 0; i <= 5; i++){
+                                        strcpy(&tabdonnees[i][60], "");
+                                        strcpy(&tabdonnees2[i][60], "");
+                                    }
+                                
                                 }
-                                else if(verif == 3){
+                                else{
                                     if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
                                         perror("send");
                                     }
                                 }
-                                else if(verif == 0){
-                                    if( send(new_socket, message00, strlen(message00), 0) != strlen(message00)){ //envoie le message commande executée
-                                        perror("send");
-                                    }
-                                }
-                                
                             }
-                            else{ 
-                                if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
-                                    perror("send");
-                                }
+                    }
+                    else if(strncmp(buffer, "/getMatrix", 10) == 0){ //verification de la commande
+                        printf("JE SUIS DANS GETMATRIX\n");
+                        if(strcmp(&buffer[11], "") == 0){
+                            int total_sent = 0;
+                            int bytes_left = NB_LIGNE*NB_COLONNE;
+                            if( send(new_socket,matrice,sizeof(matrice), 0) != strlen(message10)){ //envoie le message d'erreur bad command
+                                perror("send");
                             }
                         }
                         else{
                             if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
                                 perror("send");
                             }
-                        }
-                        for(int i = 0; i <= 5; i++){
-                            strcpy(&tabdonnees[i][60], "");
-                            strcpy(&tabdonnees2[i][60], "");
                         }
                     }
                     else if(strncmp(buffer, "/getSize", 8) == 0){ //verification de la commande
@@ -273,7 +280,6 @@ int main(int argc , char *argv[])
                             //Envoie du message
                             if( send(new_socket, messageTaille, strlen(messageTaille), 0) != strlen(messageTaille)){ //envoie le message contenant la taille
                                 perror("send");
-                                
                             }
                         }
                         else{
@@ -318,21 +324,6 @@ int main(int argc , char *argv[])
                         //appel de la Fonction getWaitTime 
 
                     }
-                    else if(strncmp(buffer, "/getMatrix", 10) == 0){ //verification de la commande 
-                        printf("JE SUIS DANS GETMATRIX\n");
-                        if(strcmp(&buffer[11], "") == 0){
-                            int total_sent = 0;
-                            int bytes_left = NB_LIGNE*NB_COLONNE;
-                            if( send(new_socket,matrice,sizeof(matrice), 0) != strlen(message10)){ //envoie le message d'erreur bad command
-                                perror("send");
-                            }
-                        }
-                        else{
-                            if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
-                                perror("send");
-                            }
-                        }
-                    }
                     else{
                         if( send(new_socket, message99, strlen(message99), 0) != strlen(message99)){
                             perror("send");
@@ -347,4 +338,3 @@ int main(int argc , char *argv[])
     }
     return 0;
 }
-

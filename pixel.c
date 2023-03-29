@@ -191,11 +191,35 @@ void binary_to_rgb(char* binary_string, int* R, int* G, int* B) {
     *B = b;
 }
 
-
-void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64){
-    strcpy(matrice[hauteur][largeur], base64);
+int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64){
+    int verif = 0;
+    verif = VerifBase64(base64);
+    if(verif == 0){
+        strcpy(matrice[hauteur][largeur], base64);
+        return 0;
+    }
+    else{
+        return 1;
+    }
+    
 }
 
-void getLimits(){
-    printf("Vous pouvez changer %d max par minutes\n", PIXEL_PER_MINUTE_MAX);
+int VerifBase64(char *base64){
+    int verif = 0;
+    if(strlen(base64) != 5){ //s'il y a plus de 4 éléments ce n'est pas une couleur et on renvoie un chiffre qui correspondra à l'erreur
+        verif = 1; 
+    }
+    else{ //sinon on verifie si les caractères correspondent à la base
+        printf("je suis dans le bon else\n");
+        int cpt = 0;
+        for(int i = 0; i < 4; i++){ 
+            if (!((base64[i] >= 'A' && base64[i] <= 'Z') || (base64[i] >= 'a' && base64[i] <= 'z') || (base64[i] >= '0' && base64[i] <= '9') || (base64[i] == '+') || (base64[i] == '/'))){
+                verif = 1;
+            }
+            else{
+                verif = 0;
+            }   
+        }
+    }
+    return verif;
 }

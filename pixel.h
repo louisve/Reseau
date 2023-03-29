@@ -16,7 +16,7 @@
 #define TRUE   1
 #define FALSE  0
 #define PORT 5000
-#define LG_MESSAGE  100000
+#define LG_MESSAGE 100000
 #define NB_COLONNE 80
 #define NB_LIGNE 40
 #define TAILLE_MAX_CHAINE 20
@@ -44,5 +44,5 @@ void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
 char* base64_to_binary(char* base64_string);
 void binary_to_rgb(char* binary_string, int* R, int* G, int* B);
-void setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64);
-void getLimits();
+int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64);
+int VerifBase64(char *base64);
