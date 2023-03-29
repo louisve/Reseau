@@ -35,6 +35,8 @@ int main(int argc , char *argv[])
     int rgwhile = 0;
     char coordonnees[10] = "";
     char tabdonnees2[5][60] = {"", "", "", "", ""};
+    char tabcolorpxsansretour[5][60] = {"", "", "", "", ""};
+    char *colorpxsansretour = malloc(50*sizeof(char));
     int hauteur = 0;
     int largeur = 0;
     char largeHaut[10][20] = {"", "", "", "", "", ""};
@@ -200,6 +202,16 @@ int main(int argc , char *argv[])
                                 
                                 //Pour mettre la couleur et les coordonnées dans des variables plus adaptées
                                 strcpy(colorpx, tabdonnees[3]);
+                                int rgretour = 0;
+                                char *decouperetourligne = strtok(colorpx, "\0");
+                                while(decouperetourligne != NULL){
+                                    strcpy(&tabcolorpxsansretour[rgretour][60], decouperetourligne);
+                                    decouperetourligne = strtok(NULL, " ");
+                                    rgretour ++;
+                                }
+
+                                strcpy(colorpxsansretour, tabcolorpxsansretour[1]);
+
                                 strcpy(coordonnees, tabdonnees[2]);
 
                                 //Pour decouper les coordonnees 
@@ -223,7 +235,7 @@ int main(int argc , char *argv[])
                                     else{
                                         //utilisation de la fonction
                                         int verif = 0;
-                                        verif = setPixel(matrice, hauteur, largeur, colorpx);
+                                        verif = setPixel(matrice, hauteur, largeur, colorpxsansretour);
                                         if(verif == 0){ //si toute les verification sont bonnes alors on envoie commande executée
                                             if( send(new_socket, message00, strlen(message00), 0) != strlen(message00)){ //envoie le message commande executé
                                                 perror("send"); 

@@ -211,7 +211,6 @@ int VerifBase64(char *base64){
     }
     else{ //sinon on verifie si les caractères correspondent à la base
         printf("je suis dans le bon else\n");
-        int cpt = 0;
         for(int i = 0; i < 4; i++){ 
             if (!((base64[i] >= 'A' && base64[i] <= 'Z') || (base64[i] >= 'a' && base64[i] <= 'z') || (base64[i] >= '0' && base64[i] <= '9') || (base64[i] == '+') || (base64[i] == '/'))){
                 verif = 1;
