@@ -22,10 +22,10 @@ int main(int argc , char *argv[])
     char *message20 = "ERROR 20 : Out of Quota\n";
     char *message10 = "ERROR 10 : Bad command\n";
 
-    char messageTaille[40] = "Taille de la matrice : ";
-    char messageVersion[20] = "Version ";
+    char *messageTaille = malloc(50*sizeof(char));
+    char *messageVersion = malloc(50*sizeof(char));
     char Version[5] = "";
-    char messageLimit[10] = "";
+    char *messageLimit = malloc(50*sizeof(char));
 
     int c;
     int port = 5000;
@@ -286,6 +286,8 @@ int main(int argc , char *argv[])
                             char msgHaut[10]; 
                             sprintf(msgHaut, "%d", NB_LIGNE);
                             //Création de la chaine de caractère
+                            strcpy(messageTaille, "");
+                            strncat(messageTaille, "Taille : ", 10);
                             strncat(messageTaille, msgLarge, 5);
                             strncat(messageTaille, "x", 2);
                             strncat(messageTaille, msgHaut, 5);
@@ -304,6 +306,7 @@ int main(int argc , char *argv[])
                     }
                     else if(strncmp(buffer, "/getLimits", 10) == 0){ //verification de la commande
                         if(strcmp(&buffer[11], "") == 0){ //verification qu'il y a uniquement la commande
+                            strcpy(messageLimit, "");
                             sprintf(messageLimit,"%d", rate_limit);
                             if( send(new_socket, messageLimit, strlen(messageLimit), 0) != strlen(messageLimit)){ //envoie le message de limite
                                 perror("send");
@@ -319,7 +322,9 @@ int main(int argc , char *argv[])
                     else if(strncmp(buffer, "/getVersion", 11) == 0){ //verification de la commande
                         if(strcmp(&buffer[12], "") == 0){ //verification qu'il y a uniquement la commande
                             //conversion en char
+                            strcpy(messageVersion, "");
                             sprintf(Version,"%d", VERSION);
+                            strcat(messageVersion, "Version : ");
                             strncat(messageVersion, Version, 2);
                             //envoie du message
                             if( send(new_socket, messageVersion, strlen(messageVersion), 0) != strlen(messageVersion)){ //envoie le message de Version
