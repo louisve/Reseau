@@ -17,8 +17,8 @@
 #define FALSE  0
 #define PORT 5000
 #define LG_MESSAGE 100000
-#define NB_COLONNE 80
-#define NB_LIGNE 40
+#define NB_COLONNE 8
+#define NB_LIGNE 4
 #define TAILLE_MAX_CHAINE 20
 #define PIXEL_PER_MINUTE_MAX 12 
 #define VERSION 1

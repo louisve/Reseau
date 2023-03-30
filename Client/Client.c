@@ -6,14 +6,17 @@ int main(int argc , char *argv[]){
     int descripteurSocket;
     struct sockaddr_in pointDeRencontreDistant;
     socklen_t longueurAdresse;
-    char messageEnvoi[LG_MESSAGE];
-    char messageRecu[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE];
+    char messageEnvoi[LG_MESSAGE] = {0};
+    char messageRecu[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE] = {0};
     int ecrits, c, lus;
     int port = 5000;
     char *pvalue = NULL;
     int envoie  = 0;
+     char a[5] = "";
+    char b[5] = "";
+    char mess[50] = "";
 
-    char* chaine64 = malloc(sizeof(char*));
+    char* chaine64 = calloc(5, sizeof(char));
     int* i = malloc(sizeof(int*));
     int* j = malloc(sizeof(int*));
 
@@ -68,7 +71,14 @@ int main(int argc , char *argv[]){
 
     while(TRUE){
     
-        fgets(messageEnvoi, 256, stdin);
+        if(envoie == 2){
+            strcpy(messageEnvoi,mess);
+            envoie = 0;
+        }
+
+        else{
+            fgets(messageEnvoi, 256, stdin);
+        }
         if(messageEnvoi != NULL){
             ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
         }
@@ -85,9 +95,11 @@ int main(int argc , char *argv[]){
             
         }
         
-        int setPixel;
+        // int setPixel;
         /* Reception des données du serveur */
-        lus = recv(descripteurSocket, messageRecu, LG_MESSAGE*sizeof(char*),0); /* attend un message de TAILLE fixe */
+        
+        lus = recv(descripteurSocket, messageRecu, LG_MESSAGE*sizeof(char),0); /* attend un message de TAILLE fixe */
+        printf("lus :%d\n",lus);
         switch(lus){
             case -1 : /* une erreur ! */
                 perror("read");
@@ -98,45 +110,48 @@ int main(int argc , char *argv[]){
                 close(descripteurSocket);
                 return 0;
             default: /* réception de n octets */
-           
-                int r = 0;
-                int t = 0;
             
-                printf("Message reçu du serveur : \n%s \n", messageRecu[r][t]);
-                // if(strlen(messageRecu[0][1]) == 4){
-                //     afficheMatrice(messageRecu);
-                // }
-          
-                envoie = affichage(chaine64,i,j,envoie, messageRecu);
-                if(envoie == 1){
-                    char a[5] = "";
-                    char b[5] = "";
-                    char mess[50] = "";
-                    sprintf(a,"%d",*j);
-                    sprintf(b,"%d",*i);
-                    strcat(mess,"/setPixel");
-                    strcat(mess," ");
-                    strcat(mess, a);
-                    strcat(mess, "x");
-                    strcat(mess, b);
-                    strcat(mess," ");
-                    strcat(mess,chaine64);
-                    if(mess != NULL){
-                        setPixel = write(descripteurSocket, mess, strlen(mess));
-                    }
+                
+                if(strlen(messageRecu[0][1]) == 4){
+                    afficheMatrice(messageRecu);
                 }
-        }
-        switch(setPixel){
-            case -1 :
-                perror("write");
-                close(descripteurSocket);
-                exit(-3);
-            case 0 : 
-                fprintf(stderr, "La socket a été fermée par le serveur !\n\n");
-                close(descripteurSocket);
-            return 0;
-            
-        }
+                else{
+                    printf("Message reçu du serveur : \n%s \n", messageRecu[0][0]);
+                }
+                
+          
+                // envoie = affichage(chaine64,i,j,envoie, messageRecu);
+                // if(envoie == 1){
+                //     char a[5] = "";
+                //     char b[5] = "";
+                //     char mess[50] = "";
+                //     sprintf(a,"%d",*j);
+                //     sprintf(b,"%d",*i);
+                //     strcat(mess,"/setPixel");
+                //     strcat(mess," ");
+                //     strcat(mess, a);
+                //     strcat(mess, "x");
+                //     strcat(mess, b);
+                //     strcat(mess," ");
+                //     strcat(mess,chaine64);
+                //     if(mess != NULL){
+                //         setPixel = write(descripteurSocket, mess, strlen(mess));
+                //     }
+                // }
+                // break;
+            for (int i = 0; i < NB_LIGNE; i++)
+            {
+                for (int j = 0; j < NB_COLONNE; j++)
+                {
+                    for(int h = 0; h < TAILLE_MAX_CHAINE; h++){
+                        //strcpy(messageRecu[i][j],"");
+                        messageRecu[i][j][h] = '\0';
+                    }
+                    
+                }
+                
+            }
+        }        
     }
     close(descripteurSocket);
     return 0;
