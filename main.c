@@ -203,7 +203,7 @@ int main(int argc , char *argv[])
                                 //Pour mettre la couleur et les coordonnées dans des variables plus adaptées
                                 strcpy(colorpx, tabdonnees[3]);
                                 int rgretour = 0;
-                                char *decouperetourligne = strtok(colorpx, "\0");
+                                char *decouperetourligne = strtok(colorpx, "\n");
                                 while(decouperetourligne != NULL){
                                     strcpy(&tabcolorpxsansretour[rgretour][60], decouperetourligne);
                                     decouperetourligne = strtok(NULL, " ");
@@ -252,6 +252,10 @@ int main(int argc , char *argv[])
                                         strcpy(&tabdonnees[i][60], "");
                                         strcpy(&tabdonnees2[i][60], "");
                                     }
+                                    strcpy(colorpxsansretour, "");
+                                    for(int i = 0; i <= 5; i++){
+                                        strcpy(&tabcolorpxsansretour[i][60], "");
+                                    }
                                 
                                 }
                                 else{
@@ -263,6 +267,7 @@ int main(int argc , char *argv[])
                     }
                     else if(strncmp(buffer, "/getMatrix", 10) == 0){ //verification de la commande
                         printf("JE SUIS DANS GETMATRIX\n");
+                        afficheMatrice(matrice);
                         if(strcmp(&buffer[11], "") == 0){
                             int total_sent = 0;
                             int bytes_left = NB_LIGNE*NB_COLONNE;
