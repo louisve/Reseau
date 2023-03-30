@@ -195,7 +195,6 @@ int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur,
     int verif = 0;
     verif = VerifBase64(base64);
     if(verif == 0){
-        afficheMatrice(matrice);
         strcpy(matrice[hauteur][largeur], base64);
         return 0;
     }
@@ -207,12 +206,10 @@ int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur,
 
 int VerifBase64(char *base64){
     int verif = 0;
-    printf("longueur chaine :%ld\n", strlen(base64));
     if(strlen(base64) != 4){ //s'il y a plus de 4 éléments ce n'est pas une couleur et on renvoie un chiffre qui correspondra à l'erreur
         verif = 1; 
     }
     else{ //sinon on verifie si les caractères correspondent à la base
-        printf("je suis dans le bon else\n");
         for(int i = 0; i < 4; i++){ 
             if (!((base64[i] >= 'A' && base64[i] <= 'Z') || (base64[i] >= 'a' && base64[i] <= 'z') || (base64[i] >= '0' && base64[i] <= '9') || (base64[i] == '+') || (base64[i] == '/'))){
                 verif = 1;

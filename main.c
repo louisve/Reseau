@@ -191,51 +191,32 @@ int main(int argc , char *argv[])
                     printf("Message reçu : %s (%d octets)\n\n", buffer, valread);
 
                     if(strncmp(buffer, "/setPixel ", 10) == 0){ //verification de la commande
-                        printf("test 10\n");
-                        afficheMatrice(matrice);
                         for(int i = 0; i <= 5; i++){
                             memset(tabdonnees[i], 0, 60);
                             memset(tabdonnees2[i], 0, 60);
                         }
-                        printf("test 9\n");
-                        afficheMatrice(matrice);
                         strcpy(colorpxsansretour, "");
-                        printf("test 8\n");
-                        afficheMatrice(matrice);
                         // for(int i = 0; i <= 5; i++){
                         //     memset(tabcolorpxsansretour[i], 0, 60);
                         // }
                         int rgwhile = 0;
-                        printf("test 7\n");
-                        afficheMatrice(matrice);
                         char *decoupe = strtok(buffer, " ");
                         while(decoupe != NULL){
                             strcpy((char*)tabdonnees[rgwhile], decoupe);
                             decoupe = strtok(NULL, " ");
                             rgwhile++;
                         }
-                        //rgwhile = 0;
-                        printf(" tabdonnees : commande : %s \n", tabdonnees[0]);
-                        printf(" tabdonnees : chiffres : %s \n", tabdonnees[1]);
-                        printf(" tabdonnees : couleur: %s \n", tabdonnees[2]);
-                        printf("test 6\n");
-                        afficheMatrice(matrice);
                         if(strcmp(tabdonnees[2], "") != 0 && strcmp(tabdonnees[1], "") != 0){ //verification de ce qu'il y a après la commande
                             
                             //Pour mettre la couleur et les coordonnées dans des variables plus adaptées
                             strcpy(colorpx, tabdonnees[2]);
-                            printf("color normale : %s\n", colorpx);
                             int rgretour = 0;
-                            printf("test 5\n");
-                            afficheMatrice(matrice);
                             char *decouperetourligne = strtok(colorpx, "\n");
                             while(decouperetourligne != NULL){
                                 strcpy((char*)tabcolorpxsansretour[rgretour], decouperetourligne);
                                 decouperetourligne = strtok(NULL, " ");
                                 rgretour ++;
                             }
-                            printf("test 4\n");
-                            afficheMatrice(matrice);
 
                             strcpy(colorpxsansretour, tabcolorpxsansretour[0]);
 
@@ -244,24 +225,16 @@ int main(int argc , char *argv[])
                             //Pour decouper les coordonnees 
                             char *decoupe2 = strtok(coordonnees, "x");
                             int rgwhile2 = 0;
-                            printf("test 3\n");
-                            afficheMatrice(matrice);
                             while(decoupe2 != NULL){
                                 strcpy((char*) tabdonnees2[rgwhile2], decoupe2);
                                 decoupe2 = strtok(NULL, " ");
                                 rgwhile2++;
                             }
-                            printf("tabdonnees2 largeur : %s\n", tabdonnees2[0]);
-                            printf("tabdonnees2 hauteur : %s\n", tabdonnees2[1]);
-                            printf("test 2\n");
-                            afficheMatrice(matrice);
                             if(strcmp(tabdonnees2[0], "") != 0 && strcmp(tabdonnees2[1], "") != 0){ //verifie la syntaxe de saisie des coordonnées
 
                                 //convertir en int les coordonnées 
                                 largeur = atoi(tabdonnees2[0]);
                                 hauteur = atoi(tabdonnees2[1]);
-                                printf("test 1\n");
-                                afficheMatrice(matrice);
                                 if(hauteur > NB_LIGNE ||  largeur > NB_COLONNE){
                                     if( send(new_socket, message11, strlen(message11), 0) != strlen(message11)){ //envoie le message d'erreur out of bound
                                         perror("send"); 
@@ -270,8 +243,6 @@ int main(int argc , char *argv[])
                                 else{
                                     //utilisation de la fonction
                                     int verif = 0;
-                                    printf(" color px : %s\n", colorpxsansretour);
-                                    // afficheMatrice(matrice);
                                     verif = setPixel(matrice, hauteur, largeur, colorpxsansretour);
                                     if(verif == 0){ //si toute les verification sont bonnes alors on envoie commande executée
                                         if( send(new_socket, message00, strlen(message00), 0) != strlen(message00)){ //envoie le message commande executé
@@ -301,7 +272,6 @@ int main(int argc , char *argv[])
                         }     
                     }
                     else if(strncmp(buffer, "/getMatrix", 10) == 0){ //verification de la commande
-                        printf("JE SUIS DANS GETMATRIX\n");
                         if(strcmp(&buffer[11], "") == 0){
                             if( send(new_socket,matrice,NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE, 0) != NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE){ //envoie le message d'erreur bad command
                                 perror("send");
