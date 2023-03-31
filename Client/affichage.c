@@ -351,3 +351,40 @@ void bouton(SDL_Renderer* renderer, SDL_Color color){
         SDL_RenderDrawLine(renderer, i, START_Y_BOUTON, i, START_Y_BOUTON+HAUTEUR_BOUTON);
     }
 }
+
+void matriceTerminal(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
+    
+    for (int i = 0; i < NB_LIGNE; i++) {
+        for (int j = 0; j < NB_COLONNE; j++) {
+            if(strcmp("AAD/",matrice[i][j]) == 0){
+                printf("\033[44m  \033[0m");
+            }
+            else if(strcmp("AP8A\0",matrice[i][j]) == 0){
+                printf("\033[42m  \033[0m");
+            }
+            else if(strcmp("/wAA\0",matrice[i][j]) == 0){
+                printf("\033[41m  \033[0m");
+            }
+    
+            else if(strcmp("AAAA\0",matrice[i][j]) == 0){
+                 printf("\033[40m  \033[0m");
+            }
+            else if(strcmp("/wD/\0",matrice[i][j]) == 0){
+                printf("\033[45m  \033[0m");
+            }
+            else if(strcmp("AP//\0",matrice[i][j]) == 0){
+                printf("\033[46m  \033[0m");
+            }
+            else if(strcmp("//8A\0",matrice[i][j]) == 0){
+                printf("\033[43m  \033[0m");
+            }
+            else if(strcmp("////\0",matrice[i][j]) == 0){
+                
+                printf("\033[47m  \033[0m");
+            }
+            
+        }
+        printf("\n");
+    }
+   
+}   

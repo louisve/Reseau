@@ -44,7 +44,8 @@ int main(int argc , char *argv[])
     int LMatrice = 80; //largeur de la matrice
     char *prate_limit = NULL;
     int rate_limit = 10;
-    char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE] = {0};
+    char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE] = calloc(NB_LIGNE, sizeof(*matrice));
+    //char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE] = {0};
     initMatrice(matrice);
 
 
@@ -272,7 +273,7 @@ int main(int argc , char *argv[])
                         }     
                     }
                     else if(strncmp(buffer, "/getMatrix", 10) == 0){ //verification de la commande
-                        if(strcmp(&buffer[11], "") == 0){
+                        if(strcmp(&buffer[11], "\0") == 0){
                             if( send(new_socket,matrice,NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE, 0) != NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE){ //envoie le message d'erreur bad command
                                 perror("send");
                             }
@@ -284,7 +285,7 @@ int main(int argc , char *argv[])
                         }
                     }
                     else if(strncmp(buffer, "/getSize", 8) == 0){ //verification de la commande
-                        if(strcmp(&buffer[9], "") == 0){
+                        if(strcmp(&buffer[9], "\0") == 0){
                             //Conversion des int en chaine de caractère puis envoie de la chaine au client
                             //largeur
                             char msgLarge[10] = {0};
@@ -313,7 +314,7 @@ int main(int argc , char *argv[])
                         
                     }
                     else if(strncmp(buffer, "/getLimits", 10) == 0){ //verification de la commande
-                        if(strcmp(&buffer[11], "") == 0){ //verification qu'il y a uniquement la commande
+                        if(strcmp(&buffer[11], "\0") == 0){ //verification qu'il y a uniquement la commande
                             strcpy(messageLimit, "");
                             sprintf(messageLimit,"%d", rate_limit);
                             printf("message limite : %s\n", messageLimit);
@@ -329,7 +330,7 @@ int main(int argc , char *argv[])
                         
                     }
                     else if(strncmp(buffer, "/getVersion", 11) == 0){ //verification de la commande
-                        if(strcmp(&buffer[12], "") == 0){ //verification qu'il y a uniquement la commande
+                        if(strcmp(&buffer[12], "\0") == 0){ //verification qu'il y a uniquement la commande
                             //conversion en char
                             strcpy(messageVersion, "");
                             sprintf(Version,"%d", VERSION);
@@ -341,6 +342,7 @@ int main(int argc , char *argv[])
                             }
                         }
                         else{
+                            printf("erreur\n");
                             if( send(new_socket, message10, strlen(message10), 0) != strlen(message10)){ //envoie le message d'erreur bad command
                                 perror("send");
                             }

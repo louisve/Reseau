@@ -12,9 +12,9 @@ int main(int argc , char *argv[]){
     int port = 5000;
     char *pvalue = NULL;
     int envoie  = 0;
-     char a[5] = "";
-    char b[5] = "";
-    char mess[50] = "";
+     char a[5] ={0};
+    char b[5] = {0};
+    char mess[50] = {0};
 
     char* chaine64 = calloc(5, sizeof(char));
     int* i = malloc(sizeof(int*));
@@ -64,21 +64,74 @@ int main(int argc , char *argv[]){
     printf("Connexion au serveur réussie avec succès !\n");
 
 
-    memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
+   
     //memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char*));
     memset(messageRecu, 0, sizeof(messageRecu));
 
 
     while(TRUE){
-    
-        if(envoie == 2){
-            strcpy(messageEnvoi,mess);
-            envoie = 0;
-        }
-
-        else{
+        memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
+        // if(envoie == 2){
+        //     strcpy(messageEnvoi,mess);
+        //     envoie = 0;
+        // }
+        int choix = 0;
+        printf("---------------------------------------------------------------------------------------------\n");              
+        printf("| Tapez l'une des commandes suivantes          |        Couleurs en base64 disponibles      |\n");
+        printf("---------------------------------------------------------------------------------------------\n");              
+        printf("|  /getMatrix                                  |                                            |\n");
+        printf("|  /getSize                                    |    Noir :    AAAA   |   Magenta : /wd/     |\n");
+        printf("|  /getLimits                                  |    Bleu :    AAD/   |   Cyan :    AP//     |\n");
+        printf("|  /getWaitTime                                |    Rouge :   /wAA   |   Jaune :   //8A     |\n");
+        printf("|  /getVersion                                 |    Blanc :   ////   |   Vert:     AP8A     |\n");
+        //printf("|     Quitter              |\n");
+        printf("|  /setPixel lignexcolonne couleur(en base 64) |                                            |\n");
+        printf("---------------------------------------------------------------------------------------------\n");              
+        // scanf("%d",&choix);
+        
+        // if(choix == 1){
+        //     strcpy(messageEnvoi,"/getMatrix");
+        //     //etat = 1;
+        // }
+        // else if(choix == 2){
+        //     strcpy(messageEnvoi,"/getSize");
+        // }
+        // else if(choix == 3){
+        //     strcpy(messageEnvoi,"/getLimits");
+        // }
+        // else if(choix == 4){
+        //     strcpy(messageEnvoi,"/getWaitTime");
+        // }
+        // else if(choix == 5){
+        //     strcpy(messageEnvoi,"/getVersion");
+        // }
+        // else if(choix == 6){
+        //     exit(0);
+        // }
+        // else if(choix == 7){
+        //     char ligne[5] = {0};
+        //     char colonne[5] = {0};
+        //     char mess[50] = {0};
+        //     char couleur[5] = {0};
+        //     printf("Veuillez entrer la ligne: \n");
+        //     scanf("%s",ligne);
+        //     printf("Veuillez entrer la ligne: \n");
+        //     scanf("%s",colonne);
+        //     printf("Veuillez entrer la couleur en base 64: \n");
+        //     scanf("%s",couleur);
+        //     strcat(mess,"/setPixel");
+        //     strcat(mess," ");
+        //     strcat(mess, ligne);
+        //     strcat(mess, "x");
+        //     strcat(mess, colonne);
+        //     strcat(mess," ");
+        //     strcat(mess,couleur);
+        //     strcpy(messageEnvoi,mess);
+            
+        // }
+        //else{
             fgets(messageEnvoi, 256, stdin);
-        }
+        //}
         if(messageEnvoi != NULL){
             ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
         }
@@ -111,11 +164,13 @@ int main(int argc , char *argv[]){
                 return 0;
             default: /* réception de n octets */
             
-                
                 if(strlen(messageRecu[0][1]) == 4){
-                    afficheMatrice(messageRecu);
+                    system("clear");
+                    matriceTerminal(messageRecu);
+
                 }
                 else{
+                    system("clear");
                     printf("Message reçu du serveur : \n%s \n", messageRecu[0][0]);
                 }
                 

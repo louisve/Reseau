@@ -33,3 +33,4 @@ void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
 void bouton(SDL_Renderer* renderer, SDL_Color color);
 void colorCase(SDL_Renderer* renderer, int i, int j,SDL_Color color);
+void matriceTerminal(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
