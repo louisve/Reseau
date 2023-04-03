@@ -8,11 +8,7 @@
 #include <arpa/inet.h> /* pour htons et inet_aton */
 #include <ctype.h>
 #include <getopt.h>
-#include <SDL2/SDL.h>
-#include "../pixel.h"
+
 
 #define LG_MESSAGE  100000
 #define TRUE 1
-
-
-

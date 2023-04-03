@@ -1,5 +1,5 @@
 main : main.o pixel.o
-	gcc -o main main.o pixel.o -lm -g
+	gcc -o main --static main.o pixel.o -lm -g
 
 main.o: main.c
 	gcc -g -Wall -c main.c

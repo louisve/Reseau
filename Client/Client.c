@@ -19,6 +19,7 @@ int main(int argc , char *argv[]){
     char* chaine64 = calloc(5, sizeof(char));
     int* i = malloc(sizeof(int*));
     int* j = malloc(sizeof(int*));
+    char* adresseIp = "127.0.0.0";
 
     descripteurSocket = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -27,11 +28,14 @@ int main(int argc , char *argv[]){
         exit(-1);
     }
 
-    while((c = getopt(argc, argv, "p:")) != -1){
+    while((c = getopt(argc, argv, "p:s:")) != -1){
         switch(c){
             case 'p':
                 pvalue = optarg;
                 port = atoi(pvalue);
+                break;
+            case 's':
+                adresseIp = optarg;
                 break;
             case '?':
                 if (optopt == 'p'){
@@ -54,7 +58,7 @@ int main(int argc , char *argv[]){
     pointDeRencontreDistant.sin_family = PF_INET;
     pointDeRencontreDistant.sin_port = htons(port);
     
-    inet_aton("127.0.0.1", &pointDeRencontreDistant.sin_addr);
+    inet_aton(adresseIp, &pointDeRencontreDistant.sin_addr);
     
     if((connect(descripteurSocket, (struct sockaddr *)&pointDeRencontreDistant, longueurAdresse)) == -1){
         perror("connect");
