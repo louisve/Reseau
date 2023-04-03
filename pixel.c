@@ -146,7 +146,7 @@ void binary_to_base64(char* binary,  char* base64_output) {
 }
 
 // Conversion : base64 -> binaire
-char* base64_to_binary(char* base64_string) {
+/*char* base64_to_binary(char* base64_string) {
     // Tableau de conversion base64 -> décimal
     const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     int base64_values[256];
@@ -172,7 +172,7 @@ char* base64_to_binary(char* base64_string) {
     }
     return binary_string;
 }
-
+*/
 // Conversion : binaire -> rgb
 void binary_to_rgb(char* binary_string, int* R, int* G, int* B) {
     // Convertir la chaîne binaire en valeurs décimales

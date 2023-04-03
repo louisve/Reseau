@@ -235,7 +235,8 @@ void message(int new_socket, char* message){
 }
 
 void getVersion(int new_socket, char* messageVersion, char* message10, char Version[5], void *buffer){
-    if(strcmp(&buffer[12], "\0") == 0){ //verification qu'il y a uniquement la commande
+    char *charBuffer = (char *)buffer; // Cast du pointeur void * en un pointeur char *
+    if(strcmp(&charBuffer[12], "\0") == 0){
         //conversion en char
         strcpy(messageVersion, "");
         sprintf(Version,"%d", VERSION);
@@ -250,6 +251,7 @@ void getVersion(int new_socket, char* messageVersion, char* message10, char Vers
         message(new_socket,message10);
     }
 }
+
 
 void commandSetPixel(char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE],int new_socket, void *buffer, char* message11, char* message00,char* message12, char*message10,char tabdonnees[5][60],char tabdonnees2[5][60],char tabcolorpxsansretour[5][60], char* colorpxsansretour,char coordonnees[10], char* colorpx, int hauteur, int largeur){
     for(int i = 0; i <= 5; i++){
@@ -325,7 +327,8 @@ void commandSetPixel(char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE],int new_sock
 }
 
 void getLimits(void* buffer,char* messageLimit, int new_socket,char *message10, int rate_limit){
-    if(strcmp(&buffer[11], "\0") == 0){ //verification qu'il y a uniquement la commande
+    char *charBuffer = (char *)buffer; // Cast du pointeur void * en un pointeur char *
+    if(strcmp(&charBuffer[11], "\0") == 0){ //verification qu'il y a uniquement la commande
         strcpy(messageLimit, "");
         sprintf(messageLimit,"%d", rate_limit);
         printf("message limite : %s\n", messageLimit);
@@ -339,7 +342,8 @@ void getLimits(void* buffer,char* messageLimit, int new_socket,char *message10, 
 }
 
 void getMatrix(int new_socket, void* buffer, char*message10,char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE]){
-    if(strcmp(&buffer[11], "\0") == 0){
+    char *charBuffer = (char *)buffer; // Cast du pointeur void * en un pointeur char *
+    if(strcmp(&charBuffer[11], "\0") == 0){
         if( send(new_socket,matrice,NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE, 0) != NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE){ //envoie le message d'erreur bad command
             perror("send");
         }
@@ -351,7 +355,8 @@ void getMatrix(int new_socket, void* buffer, char*message10,char (*matrice)[NB_C
 }
 
 void getSize(int new_socket, void* buffer,char* messageTaille, char* message10){
-    if(strcmp(&buffer[9], "\0") == 0){
+    char *charBuffer = (char *)buffer; // Cast du pointeur void * en un pointeur char *
+    if(strcmp(&charBuffer[9], "\0") == 0){
         //Conversion des int en chaine de caractère puis envoie de la chaine au client
         //largeur
         char msgLarge[10] = {0};

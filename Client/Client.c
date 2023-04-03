@@ -11,14 +11,7 @@ int main(int argc , char *argv[]){
     int ecrits, c, lus;
     int port = 5000;
     char *pvalue = NULL;
-    int envoie  = 0;
-     char a[5] ={0};
-    char b[5] = {0};
-    char mess[50] = {0};
-
-    char* chaine64 = calloc(5, sizeof(char));
-    int* i = malloc(sizeof(int*));
-    int* j = malloc(sizeof(int*));
+    
     char* adresseIp = "127.0.0.0";
 
     longueurAdresse = sizeof(pointDeRencontreDistant);
@@ -80,6 +73,11 @@ int main(int argc , char *argv[]){
         listeCommandes();
         
         //PARTIE SDL : NOUS N'AVONS PAS EU LE TEMPS DE L'IMPLÉMENTER
+            // int envoie  = 0;
+            // char a[5] ={0};
+            // char b[5] = {0};
+            // char mess[50] = {0};
+            // char* chaine64 = calloc(5, sizeof(char));
             // if(choix == 1){
             //     strcpy(messageEnvoi,"/getMatrix");
             //     //etat = 1;
@@ -165,6 +163,8 @@ int main(int argc , char *argv[]){
                 }
                 
                 //PARTIE SDL : ON N'A PAS EU LE TEMPS DE L'IMPLÉMENTER
+                    // int* i = malloc(sizeof(int*));
+                    // int* j = malloc(sizeof(int*));
                     // envoie = affichage(chaine64,i,j,envoie, messageRecu);
                     // if(envoie == 1){
                     //     char a[5] = "";
