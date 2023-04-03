@@ -1,6 +1,6 @@
 #include "pixel.h"
 
-
+//Ajouter un client à la liste chainée
 void add_client(Client **head, int socket) {
 
     printf("Ajout du client %d\n\n",socket);
@@ -22,6 +22,7 @@ void add_client(Client **head, int socket) {
     
 }
 
+//Enlever un client de la liste chainée
 void remove_client(Client **head, int socket) {
 
     printf("Déconnexion du client %d\n\n",socket);
@@ -45,7 +46,7 @@ void remove_client(Client **head, int socket) {
     }
 }
 
-
+//Afficher les clients connectés
 void print_clients(Client *head) {
     printf("Connected clients: ");
     while (head != NULL) {
@@ -55,7 +56,7 @@ void print_clients(Client *head) {
     printf("\n");
 }
 
-
+//Initialise la matrice : ici à blanc
 void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
@@ -64,7 +65,7 @@ void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     }
 }
 
-
+//Affiche la matrice en base64
 void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     for (int i = 0; i < NB_LIGNE; i++){
         for (int j = 0; j < NB_COLONNE; j++){
@@ -74,20 +75,18 @@ void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
     }
 }
 
-
-char* intToBinary(int n,int decal,char *binary) {
-    
+// Conversion : entier -> binaire
+char* intToBinary(int n,int decal,char *binary) { 
     // Itérer sur chaque bit dans l'entier et le définir dans la chaîne binaire
     for (int i = decal; i >= 0; i--) {
         if (n & (1 << i)) {
             binary[decal - i] = '1';
         }
     }
-
     return binary;
 }
 
-
+// Conversion : RGB -> binaire
 char * rgbToBinary(int r, int g, int b){
     char* binary = (char*)malloc(25 * sizeof(char));
     memset(binary, '0', 24);
@@ -100,7 +99,7 @@ char * rgbToBinary(int r, int g, int b){
     return binary;
 }
 
-
+// Conversion : binaire -> base64
 void binary_to_base64(char* binary,  char* base64_output) {
     char* base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"; // Tableau de conversion base64
     int i, j, k;
@@ -146,7 +145,7 @@ void binary_to_base64(char* binary,  char* base64_output) {
     base64_output[index] = '\0';
 }
 
-
+// Conversion : base64 -> binaire
 char* base64_to_binary(char* base64_string) {
     // Tableau de conversion base64 -> décimal
     const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -171,11 +170,10 @@ char* base64_to_binary(char* base64_string) {
             binary_string[k++] = ((decoded_bytes[i] >> j) & 1) ? '1' : '0';
         }
     }
-    
     return binary_string;
 }
 
-
+// Conversion : binaire -> rgb
 void binary_to_rgb(char* binary_string, int* R, int* G, int* B) {
     // Convertir la chaîne binaire en valeurs décimales
     int r = 0, g = 0, b = 0;
@@ -191,6 +189,7 @@ void binary_to_rgb(char* binary_string, int* R, int* G, int* B) {
     *B = b;
 }
 
+//Mettre à jour la case de la matrice sélectionnée avec la nouvelle couleur en base64
 int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64){
     int verif = 0;
     verif = VerifBase64(base64);
@@ -204,6 +203,7 @@ int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur,
     
 }
 
+//Vérifier que les charactères sont une couleur en base64
 int VerifBase64(char *base64){
     int verif = 0;
     if(strlen(base64) != 4){ //s'il y a plus de 4 éléments ce n'est pas une couleur et on renvoie un chiffre qui correspondra à l'erreur

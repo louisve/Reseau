@@ -23,26 +23,28 @@
 #define PIXEL_PER_MINUTE_MAX 12 
 #define VERSION 1
 
-
+//Liste chainée de clients
 struct CLIENT {
     int socket;
     struct CLIENT *next;
 };
-
-
 typedef struct CLIENT Client;
 typedef struct COULEUR couleur;
 
-
+//Gestion de la liste chainée
 void add_client(Client **head, int socket);
 void remove_client(Client **head, int socket);
 void print_clients(Client *head);
+
+//Gestion de la matrice 
 void initMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
 void afficheMatrice(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]);
+int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64);
+int VerifBase64(char *base64);
+
+//Conversions
 char* intToBinary(int n,int decal,char *binary);
 void binary_to_base64(char* binary, char* base64_output);
 char * rgbToBinary(int r, int g, int b);
 char* base64_to_binary(char* base64_string);
 void binary_to_rgb(char* binary_string, int* R, int* G, int* B);
-int setPixel(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE], int hauteur, int largeur, char *base64);
-int VerifBase64(char *base64);

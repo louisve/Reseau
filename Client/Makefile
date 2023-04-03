@@ -1,6 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -std=gnu99 -DXDG_RUNTIME_DIR=/run/user/$(id -u)
-LDFLAGS=-lSDL2 -lm
+LDFLAGS= -lm
+# si on veut SDL : LDFLAGS=/*-lSDL2*/ -lm
 
 SRC=Client.c ../pixel.c affichage.c
 OBJ=$(SRC:.c=.o)

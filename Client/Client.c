@@ -1,8 +1,8 @@
-
 #include "affichage.h"
 
 int main(int argc , char *argv[]){
 
+    //Déclaration / initialisation des variables
     int descripteurSocket;
     struct sockaddr_in pointDeRencontreDistant;
     socklen_t longueurAdresse;
@@ -21,6 +21,10 @@ int main(int argc , char *argv[]){
     int* j = malloc(sizeof(int*));
     char* adresseIp = "127.0.0.0";
 
+    longueurAdresse = sizeof(pointDeRencontreDistant);
+    memset(&pointDeRencontreDistant, 0x00, longueurAdresse);
+    memset(messageRecu, 0, sizeof(messageRecu));
+
     descripteurSocket = socket(PF_INET, SOCK_STREAM, 0);
 
     if(descripteurSocket < 0){
@@ -28,6 +32,7 @@ int main(int argc , char *argv[]){
         exit(-1);
     }
 
+    //Gestion des options au lancement du client
     while((c = getopt(argc, argv, "p:s:")) != -1){
         switch(c){
             case 'p':
@@ -53,8 +58,7 @@ int main(int argc , char *argv[]){
         }
     }
 
-    longueurAdresse = sizeof(pointDeRencontreDistant);
-    memset(&pointDeRencontreDistant, 0x00, longueurAdresse);
+    
     pointDeRencontreDistant.sin_family = PF_INET;
     pointDeRencontreDistant.sin_port = htons(port);
     
@@ -68,74 +72,57 @@ int main(int argc , char *argv[]){
     printf("Connexion au serveur réussie avec succès !\n");
 
 
-   
-    //memset(messageRecu, 0x00, LG_MESSAGE*sizeof(char*));
-    memset(messageRecu, 0, sizeof(messageRecu));
-
-
+   //Gestion des commandes envoyées au serveur
     while(TRUE){
         memset(messageEnvoi, 0x00, LG_MESSAGE*sizeof(char));
-        // if(envoie == 2){
-        //     strcpy(messageEnvoi,mess);
-        //     envoie = 0;
-        // }
-        int choix = 0;
-        printf("---------------------------------------------------------------------------------------------\n");              
-        printf("| Tapez l'une des commandes suivantes          |        Couleurs en base64 disponibles      |\n");
-        printf("---------------------------------------------------------------------------------------------\n");              
-        printf("|  /getMatrix                                  |                                            |\n");
-        printf("|  /getSize                                    |    Noir :    AAAA   |   Magenta : /wd/     |\n");
-        printf("|  /getLimits                                  |    Bleu :    AAD/   |   Cyan :    AP//     |\n");
-        printf("|  /getWaitTime                                |    Rouge :   /wAA   |   Jaune :   //8A     |\n");
-        printf("|  /getVersion                                 |    Blanc :   ////   |   Vert:     AP8A     |\n");
-        //printf("|     Quitter              |\n");
-        printf("|  /setPixel lignexcolonne couleur(en base 64) |                                            |\n");
-        printf("---------------------------------------------------------------------------------------------\n");              
-        // scanf("%d",&choix);
         
-        // if(choix == 1){
-        //     strcpy(messageEnvoi,"/getMatrix");
-        //     //etat = 1;
-        // }
-        // else if(choix == 2){
-        //     strcpy(messageEnvoi,"/getSize");
-        // }
-        // else if(choix == 3){
-        //     strcpy(messageEnvoi,"/getLimits");
-        // }
-        // else if(choix == 4){
-        //     strcpy(messageEnvoi,"/getWaitTime");
-        // }
-        // else if(choix == 5){
-        //     strcpy(messageEnvoi,"/getVersion");
-        // }
-        // else if(choix == 6){
-        //     exit(0);
-        // }
-        // else if(choix == 7){
-        //     char ligne[5] = {0};
-        //     char colonne[5] = {0};
-        //     char mess[50] = {0};
-        //     char couleur[5] = {0};
-        //     printf("Veuillez entrer la ligne: \n");
-        //     scanf("%s",ligne);
-        //     printf("Veuillez entrer la ligne: \n");
-        //     scanf("%s",colonne);
-        //     printf("Veuillez entrer la couleur en base 64: \n");
-        //     scanf("%s",couleur);
-        //     strcat(mess,"/setPixel");
-        //     strcat(mess," ");
-        //     strcat(mess, ligne);
-        //     strcat(mess, "x");
-        //     strcat(mess, colonne);
-        //     strcat(mess," ");
-        //     strcat(mess,couleur);
-        //     strcpy(messageEnvoi,mess);
-            
-        // }
-        //else{
-            fgets(messageEnvoi, 256, stdin);
-        //}
+        //Affichage des commandes utilisables
+        listeCommandes();
+        
+        //PARTIE SDL : NOUS N'AVONS PAS EU LE TEMPS DE L'IMPLÉMENTER
+            // if(choix == 1){
+            //     strcpy(messageEnvoi,"/getMatrix");
+            //     //etat = 1;
+            // }
+            // else if(choix == 2){
+            //     strcpy(messageEnvoi,"/getSize");
+            // }
+            // else if(choix == 3){
+            //     strcpy(messageEnvoi,"/getLimits");
+            // }
+            // else if(choix == 4){
+            //     strcpy(messageEnvoi,"/getWaitTime");
+            // }
+            // else if(choix == 5){
+            //     strcpy(messageEnvoi,"/getVersion");
+            // }
+            // else if(choix == 6){
+            //     exit(0);
+            // }
+            // else if(choix == 7){
+            //     char ligne[5] = {0};
+            //     char colonne[5] = {0};
+            //     char mess[50] = {0};
+            //     char couleur[5] = {0};
+            //     printf("Veuillez entrer la ligne: \n");
+            //     scanf("%s",ligne);
+            //     printf("Veuillez entrer la ligne: \n");
+            //     scanf("%s",colonne);
+            //     printf("Veuillez entrer la couleur en base 64: \n");
+            //     scanf("%s",couleur);
+            //     strcat(mess,"/setPixel");
+            //     strcat(mess," ");
+            //     strcat(mess, ligne);
+            //     strcat(mess, "x");
+            //     strcat(mess, colonne);
+            //     strcat(mess," ");
+            //     strcat(mess,couleur);
+            //     strcpy(messageEnvoi,mess);
+                
+            // }
+    
+        fgets(messageEnvoi, 256, stdin);
+
         if(messageEnvoi != NULL){
             ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
         }
@@ -152,9 +139,8 @@ int main(int argc , char *argv[]){
             
         }
         
-        // int setPixel;
-        /* Reception des données du serveur */
         
+        //Gestion des messages reçu du serveur
         lus = recv(descripteurSocket, messageRecu, LG_MESSAGE*sizeof(char),0); /* attend un message de TAILLE fixe */
         printf("lus :%d\n",lus);
         switch(lus){
@@ -178,32 +164,31 @@ int main(int argc , char *argv[]){
                     printf("Message reçu du serveur : \n%s \n", messageRecu[0][0]);
                 }
                 
-          
-                // envoie = affichage(chaine64,i,j,envoie, messageRecu);
-                // if(envoie == 1){
-                //     char a[5] = "";
-                //     char b[5] = "";
-                //     char mess[50] = "";
-                //     sprintf(a,"%d",*j);
-                //     sprintf(b,"%d",*i);
-                //     strcat(mess,"/setPixel");
-                //     strcat(mess," ");
-                //     strcat(mess, a);
-                //     strcat(mess, "x");
-                //     strcat(mess, b);
-                //     strcat(mess," ");
-                //     strcat(mess,chaine64);
-                //     if(mess != NULL){
-                //         setPixel = write(descripteurSocket, mess, strlen(mess));
-                //     }
-                // }
-                // break;
+                //PARTIE SDL : ON N'A PAS EU LE TEMPS DE L'IMPLÉMENTER
+                    // envoie = affichage(chaine64,i,j,envoie, messageRecu);
+                    // if(envoie == 1){
+                    //     char a[5] = "";
+                    //     char b[5] = "";
+                    //     char mess[50] = "";
+                    //     sprintf(a,"%d",*j);
+                    //     sprintf(b,"%d",*i);
+                    //     strcat(mess,"/setPixel");
+                    //     strcat(mess," ");
+                    //     strcat(mess, a);
+                    //     strcat(mess, "x");
+                    //     strcat(mess, b);
+                    //     strcat(mess," ");
+                    //     strcat(mess,chaine64);
+                    //     if(mess != NULL){
+                    //         setPixel = write(descripteurSocket, mess, strlen(mess));
+                    //     }
+                    // }
+                    // break;
             for (int i = 0; i < NB_LIGNE; i++)
             {
                 for (int j = 0; j < NB_COLONNE; j++)
                 {
                     for(int h = 0; h < TAILLE_MAX_CHAINE; h++){
-                        //strcpy(messageRecu[i][j],"");
                         messageRecu[i][j][h] = '\0';
                     }
                     
