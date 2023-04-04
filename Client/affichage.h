@@ -1,8 +1,6 @@
 #include "Client.h"
 
-
 // #include <SDL2/SDL.h>
-
 
 // // dimensions de la fenêtre
 // #define SCREEN_WIDTH 1920

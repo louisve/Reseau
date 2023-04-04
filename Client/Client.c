@@ -7,7 +7,8 @@ int main(int argc , char *argv[]){
     struct sockaddr_in pointDeRencontreDistant;
     socklen_t longueurAdresse;
     char messageEnvoi[LG_MESSAGE] = {0};
-    char messageRecu[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE] = {0};
+    //char messageRecu[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE] = {0};
+    char (*messageRecu)[NB_COLONNE][TAILLE_MAX_CHAINE] = calloc(NB_LIGNE, sizeof(*messageRecu));
     int ecrits, c, lus;
     int port = 5000;
     char *pvalue = NULL;
@@ -16,7 +17,6 @@ int main(int argc , char *argv[]){
 
     longueurAdresse = sizeof(pointDeRencontreDistant);
     memset(&pointDeRencontreDistant, 0x00, longueurAdresse);
-    memset(messageRecu, 0, sizeof(messageRecu));
 
     descripteurSocket = socket(PF_INET, SOCK_STREAM, 0);
 
@@ -50,7 +50,6 @@ int main(int argc , char *argv[]){
                 abort();
         }
     }
-
     
     pointDeRencontreDistant.sin_family = PF_INET;
     pointDeRencontreDistant.sin_port = htons(port);
@@ -124,6 +123,7 @@ int main(int argc , char *argv[]){
         if(messageEnvoi != NULL){
             ecrits = write(descripteurSocket, messageEnvoi, strlen(messageEnvoi));
         }
+        
 
         switch(ecrits){
             case -1 :
@@ -139,8 +139,9 @@ int main(int argc , char *argv[]){
         
         
         //Gestion des messages reçu du serveur
+       
         lus = recv(descripteurSocket, messageRecu, LG_MESSAGE*sizeof(char),0); /* attend un message de TAILLE fixe */
-        printf("lus :%d\n",lus);
+
         switch(lus){
             case -1 : /* une erreur ! */
                 perror("read");
@@ -151,11 +152,10 @@ int main(int argc , char *argv[]){
                 close(descripteurSocket);
                 return 0;
             default: /* réception de n octets */
-            
                 if(strlen(messageRecu[0][1]) == 4){
                     system("clear");
                     matriceTerminal(messageRecu);
-
+                    
                 }
                 else{
                     system("clear");

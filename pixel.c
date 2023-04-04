@@ -18,8 +18,7 @@ void add_client(Client **head, int socket) {
     while (current->next != NULL) {
         current = current->next;
     }
-    current->next = new_client;
-    
+    current->next = new_client;    
 }
 
 //Enlever un client de la liste chainée
@@ -145,34 +144,6 @@ void binary_to_base64(char* binary,  char* base64_output) {
     base64_output[index] = '\0';
 }
 
-// Conversion : base64 -> binaire
-/*char* base64_to_binary(char* base64_string) {
-    // Tableau de conversion base64 -> décimal
-    const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    int base64_values[256];
-    memset(base64_values, -1, sizeof(base64_values));
-    for (int i = 0; i < 64; i++) {
-        base64_values[base64_chars[i]] = i;
-    }
-    
-    // Décoder la chaîne base64 en bytes
-    int decoded_bytes[3];
-    decoded_bytes[0] = base64_values[base64_string[0]];
-    decoded_bytes[1] = base64_values[base64_string[1]];
-    decoded_bytes[2] = base64_values[base64_string[2]];
-    decoded_bytes[3] = base64_values[base64_string[3]];
-    
-    // Convertir chaque byte en sa représentation binaire
-    char* binary_string = (char*) malloc(24 * sizeof(char));
-    int k = 0;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 5; j >= 0; j--) {
-            binary_string[k++] = ((decoded_bytes[i] >> j) & 1) ? '1' : '0';
-        }
-    }
-    return binary_string;
-}
-*/
 // Conversion : binaire -> rgb
 void binary_to_rgb(char* binary_string, int* R, int* G, int* B) {
     // Convertir la chaîne binaire en valeurs décimales

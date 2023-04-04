@@ -15,7 +15,6 @@ void matriceTerminal(char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE]){
             else if(strcmp("/wAA\0",matrice[i][j]) == 0){
                 printf("\033[41m  \033[0m");
             }
-    
             else if(strcmp("AAAA\0",matrice[i][j]) == 0){
                  printf("\033[40m  \033[0m");
             }

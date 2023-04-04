@@ -51,7 +51,6 @@ int main(int argc , char *argv[])
     char *prate_limit = NULL;
     int rate_limit = 10;
     char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE] = calloc(NB_LIGNE, sizeof(*matrice));
-    //char matrice[NB_LIGNE][NB_COLONNE][TAILLE_MAX_CHAINE] = {0};
     initMatrice(matrice);
 
 
@@ -162,16 +161,10 @@ int main(int argc , char *argv[])
             }
          
             printf("Connexion de %s : %d \n" , inet_ntoa(address.sin_addr) , ntohs(address.sin_port));
-       
-            // if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
-            // {
-            //     perror("send");
-            // }
             
             add_client(&clients, new_socket);               
         }
          
-
         current = clients;
         while (current != NULL){
 
@@ -240,13 +233,11 @@ void getVersion(int new_socket, char* messageVersion, char* message10, char Vers
         //conversion en char
         strcpy(messageVersion, "");
         sprintf(Version,"%d", VERSION);
-        strcat(messageVersion, "Version : ");
         strncat(messageVersion, Version, 2);
         //Renvoie la version du protocole
         message(new_socket,messageVersion);
     }
     else{
-        printf("erreur\n");
         //Bad command
         message(new_socket,message10);
     }
@@ -259,9 +250,6 @@ void commandSetPixel(char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE],int new_sock
         memset(tabdonnees2[i], 0, 60);
     }
     strcpy(colorpxsansretour, "");
-    // for(int i = 0; i <= 5; i++){
-    //     memset(tabcolorpxsansretour[i], 0, 60);
-    // }
     int rgwhile = 0;
     char *decoupe = strtok(buffer, " ");
     while(decoupe != NULL){
@@ -297,20 +285,19 @@ void commandSetPixel(char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE],int new_sock
             if(hauteur > NB_LIGNE ||  largeur > NB_COLONNE){
                 //Out of Bound
                 message(new_socket,message11);
+        }
+        else{
+            //utilisation de la fonction
+            int verif = 0;
+            verif = setPixel(matrice, hauteur, largeur, colorpxsansretour);
+            if(verif == 0){ //si toute les verification sont bonnes alors on envoie commande executée
+                //Commande exécutée
+                message(new_socket,message00);
             }
-            else{
-                //utilisation de la fonction
-                int verif = 0;
-                verif = setPixel(matrice, hauteur, largeur, colorpxsansretour);
-                if(verif == 0){ //si toute les verification sont bonnes alors on envoie commande executée
-                    //Commande exécutée
-                    message(new_socket,message00);
-                }
-                else{ //la couleur n'est pas bonne
-                printf("erreur ?\n");
-                    //Bad color
-                    message(new_socket,message12);
-                }
+            else{ //la couleur n'est pas bonne
+                //Bad color
+                message(new_socket,message12);
+            }
         }
         
         }
@@ -331,8 +318,7 @@ void getLimits(void* buffer,char* messageLimit, int new_socket,char *message10, 
     if(strcmp(&charBuffer[11], "\0") == 0){ //verification qu'il y a uniquement la commande
         strcpy(messageLimit, "");
         sprintf(messageLimit,"%d", rate_limit);
-        printf("message limite : %s\n", messageLimit);
-         //Renvoie la limite
+        //Renvoie la limite
         message(new_socket,messageLimit);
     }
     else{
@@ -344,10 +330,11 @@ void getLimits(void* buffer,char* messageLimit, int new_socket,char *message10, 
 void getMatrix(int new_socket, void* buffer, char*message10,char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE]){
     char *charBuffer = (char *)buffer; // Cast du pointeur void * en un pointeur char *
     if(strcmp(&charBuffer[11], "\0") == 0){
-        if( send(new_socket,matrice,NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE, 0) != NB_LIGNE*NB_COLONNE*TAILLE_MAX_CHAINE){ //envoie le message d'erreur bad command
+        if( send(new_socket,matrice,NB_COLONNE*NB_LIGNE*TAILLE_MAX_CHAINE, 0) != NB_COLONNE*NB_LIGNE*TAILLE_MAX_CHAINE){ //envoie le message d'erreur bad command
             perror("send");
         }
     }
+    
     else{
         //Bad command
         message(new_socket,message10);
@@ -370,9 +357,7 @@ void getSize(int new_socket, void* buffer,char* messageTaille, char* message10){
         strncat(messageTaille, msgLarge, 5);
         strncat(messageTaille, "x", 2);
         strncat(messageTaille, msgHaut, 5);
-        //Envoie du message
-        printf("message :%s\n", messageTaille);
-    //Renvoie la taille de la matrice
+        //Renvoie la taille de la matrice
         message(new_socket,messageTaille);
     }
     else{

@@ -9,6 +9,5 @@
 #include <ctype.h>
 #include <getopt.h>
 
-
 #define LG_MESSAGE  100000
 #define TRUE 1
