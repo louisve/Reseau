@@ -49,6 +49,7 @@ int main(int argc , char *argv[])
     int HMatrice = 40; //hauteur de la matrice
     int LMatrice = 80; //largeur de la matrice
     char *prate_limit = NULL;
+    char *psize = NULL;
     int rate_limit = 10;
     char (*matrice)[NB_COLONNE][TAILLE_MAX_CHAINE] = calloc(NB_LIGNE, sizeof(*matrice));
     initMatrice(matrice);
@@ -62,8 +63,9 @@ int main(int argc , char *argv[])
                 port = atoi(pvalue);
                 break;
             case 's':
-                //decoupage de ce que l'on a recupéré 
-                char *decoupeHauteurLargeur = strtok(optarg, "x");
+                //decoupage de ce que l'on a recupéré
+                psize = optarg; 
+                char *decoupeHauteurLargeur = strtok(psize, "x");
                 int rg = 0;
                 while(decoupeHauteurLargeur != NULL){
                     strcpy(&largeHaut[rg][20], decoupeHauteurLargeur);
